@@ -21,15 +21,23 @@ cp -r "$REPO_DIR/skills/"* "$HERMES_SKILLS_DIR/"
 find "$HERMES_SKILLS_DIR" -name "*.py" -exec chmod +x {} + 2>/dev/null || true
 find "$HERMES_SKILLS_DIR" -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
 
+# 4. Opsional: Cek apakah officecli terinstall di laptop/mesin
+if ! command -v officecli &> /dev/null; then
+    echo "💡 Tips: Anda dapat menginstal officecli untuk manipulasi file Word/Excel/PPT di laptop tanpa MS Office:"
+    echo "   curl -fsSL https://d.officecli.ai/install.sh | bash  (Linux/macOS)"
+    echo "   irm https://d.officecli.ai/install.ps1 | iex         (Windows PowerShell)"
+fi
+
 echo ""
 echo "✅ Instalasi Berhasil!"
 echo "--------------------------------------------------"
 echo "Skill yang terpasang di Hermes Agent:"
-echo "  1. unesa-academic-standards  - Format Makalah/Skripsi/DOCX"
-echo "  2. unesa-communication-hub    - Chat Dosen & Broadcast Komti"
-echo "  3. academic-presentation-mastery - Slide & Speaker Notes"
-echo "  4. lab-and-coding-practical  - Laporan Praktikum & Clean Code"
-echo "  5. smart-study-and-research  - Bedah Jurnal & Bank Soal UTS/UAS"
-echo "  6. unesa-portal-guide        - Panduan Siakadu, Vinesa, SiDia, TEP"
+echo "  1. unesa-academic-standards    - Format Makalah/Skripsi/DOCX"
+echo "  2. unesa-office-engine         - Manipulasi Word, Excel & PPT di Laptop (officecli)"
+echo "  3. unesa-communication-hub      - Chat Dosen & Broadcast Komti"
+echo "  4. academic-presentation-mastery - Slide & Speaker Notes"
+echo "  5. lab-and-coding-practical    - Laporan Praktikum & Clean Code"
+echo "  6. smart-study-and-research    - Bedah Jurnal & Bank Soal UTS/UAS"
+echo "  7. unesa-portal-guide          - Panduan Siakadu, Vinesa, SiDia, TEP"
 echo "--------------------------------------------------"
 echo "💡 Jalankan 'hermes' dan panggil skill kapan pun kamu butuh bantuan akademik!"
