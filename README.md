@@ -24,6 +24,15 @@ Sering kali hasil generasi AI generik memiliki masalah umum:
 
 ---
 
+## 🧠 Dilengkapi Persona Akademik (`SOUL_TEMPLATE.md`)
+
+Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SOUL_TEMPLATE.md) menyuntikkan *soul / persona* yang mengubah AI dari sekadar chatbot korporat pasif menjadi **Personal Academic Second Brain**:
+* 🎯 **Direct & To-The-Point:** Menghilangkan basa-basi pembuka ("Tentu!", "Pertanyaan yang bagus!").
+* 🛡️ **Strict Anti-AI Slop:** Selalu mengawali analisis dengan fakta empiris/data riil lapangan.
+* 💬 **Platform-Aware Formatting:** Otomatis menyesuaikan gaya tulisan dan rumus matematika untuk WhatsApp, Discord, Telegram, dan Terminal.
+
+---
+
 ## 📦 Daftar 7 Skill yang Termasuk
 
 | Nama Skill | Deskripsi & Kegunaan |
@@ -70,7 +79,7 @@ bash /tmp/unesa-pack/install.sh && \
 rm -rf /tmp/unesa-pack
 ```
 
-Atau salin folder repository ini ke `~/.hermes/skills/academic/`.
+*Installer akan otomatis menyalin seluruh skill dan menyiapkan template `SOUL.md` akademik jika belum ada.*
 
 ---
 

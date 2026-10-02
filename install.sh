@@ -7,6 +7,7 @@ set -e
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HERMES_SKILLS_DIR="$HOME/.hermes/skills/academic"
+HERMES_SOUL_PATH="$HOME/.hermes/SOUL.md"
 
 echo "🎓 Memulai instalasi UNESA Academic Skill Pack..."
 
@@ -21,8 +22,18 @@ cp -r "$REPO_DIR/skills/"* "$HERMES_SKILLS_DIR/"
 find "$HERMES_SKILLS_DIR" -name "*.py" -exec chmod +x {} + 2>/dev/null || true
 find "$HERMES_SKILLS_DIR" -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
 
-# 4. Opsional: Cek apakah officecli terinstall di laptop/mesin
+# 4. Opsional: Pasang SOUL.md jika belum ada atau user ingin menggunakannya
+if [ ! -f "$HERMES_SOUL_PATH" ]; then
+    echo "✨ Menyiapkan SOUL.md akademik default di $HERMES_SOUL_PATH..."
+    cp "$REPO_DIR/SOUL_TEMPLATE.md" "$HERMES_SOUL_PATH"
+else
+    echo "ℹ️  SOUL.md yang sudah ada di $HERMES_SOUL_PATH dipertahankan."
+    echo "   (Lihat '$REPO_DIR/SOUL_TEMPLATE.md' jika ingin menggabungkan persona akademik)."
+fi
+
+# 5. Opsional: Cek apakah officecli terinstall di laptop/mesin
 if ! command -v officecli &> /dev/null; then
+    echo ""
     echo "💡 Tips: Anda dapat menginstal officecli untuk manipulasi file Word/Excel/PPT di laptop tanpa MS Office:"
     echo "   curl -fsSL https://d.officecli.ai/install.sh | bash  (Linux/macOS)"
     echo "   irm https://d.officecli.ai/install.ps1 | iex         (Windows PowerShell)"
