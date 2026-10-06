@@ -61,7 +61,7 @@ Mengatur jadwal kuliah, janji temu, dan tenggat waktu secara otomatis:
 * **Google Tasks (Action & Deadlines):** Deadline pengumpulan tugas, persiapan bahan praktikum, checklist belajar ujian.
 * **Anti-Duplikasi (Strict Upsert):** Tidak membuat event dobel saat ada ralat jadwal — sistem otomatis mem-patch event yang sudah ada.
 * **Panduan Praktis Integrasi & OAuth:**
-  - 📖 [Panduan Setup Google Calendar & Tasks untuk Pengguna & Developer](docs/PANDUAN_SETUP_GOOGLE_CALENDAR_DAN_OAUTH.md)
+  - 📖 [Panduan Setup Mandiri Google Calendar & Tasks](docs/PANDUAN_SETUP_GOOGLE_CALENDAR_DAN_OAUTH.md)
   - 🔐 [Dokumen Teknis Google Cloud & Ketentuan OAuth Deployment](docs/GOOGLE_OAUTH_DEPLOYMENT.md)
 
 ---
