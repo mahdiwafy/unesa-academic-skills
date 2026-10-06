@@ -2,12 +2,13 @@
 
 [![Hermes Agent](https://img.shields.io/badge/Hermes_Agent-Ready-blue.svg)](https://hermes-agent.nousresearch.com)
 [![WhatsApp Bridge](https://img.shields.io/badge/WhatsApp-Wameow%20Anti--Ban-success.svg)](https://github.com/mahdiwafy/wameow)
+[![Calendar & Tasks](https://img.shields.io/badge/Google-Calendar%20%7C%20Tasks-4285F4.svg)](#-manajemen-jadwal-akademik--kehidupan-academic-life-schedule)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![UNESA](https://img.shields.io/badge/Kampus-UNESA-yellow.svg)](https://unesa.ac.id)
 [![Office Support](https://img.shields.io/badge/Office-Word%20|%20Excel%20|%20PPT-blueviolet.svg)](#)
 [![Anti-AI Slop](https://img.shields.io/badge/Standard-Anti--AI--Slop-red.svg)](#)
 
-Kumpulan **Skill & Standar Operasional Prosedur (SOP) Akademik** untuk AI Agent ([Hermes Agent](https://hermes-agent.nousresearch.com), Claude Code, Cursor, Windsurf) maupun Web AI (ChatGPT, Claude, Gemini). Dirancang khusus untuk mahasiswa Universitas Negeri Surabaya (UNESA) dan perguruan tinggi di Indonesia agar hasil pengerjaan tugas, makalah, presentasi, pengolahan spreadsheet, dan integrasi komunikasi WhatsApp kampus memiliki kualitas tinggi, presisi, dan bebas dari halusinasi/bahasa klise AI (*anti-slop*).
+Kumpulan **Skill & Standar Operasional Prosedur (SOP) Akademik** untuk AI Agent ([Hermes Agent](https://hermes-agent.nousresearch.com), Claude Code, Cursor, Windsurf) maupun Web AI (ChatGPT, Claude, Gemini). Dirancang khusus untuk mahasiswa Universitas Negeri Surabaya (UNESA) dan perguruan tinggi di Indonesia agar hasil pengerjaan tugas, makalah, presentasi, pengolahan spreadsheet, manajemen jadwal kuliah/kehidupan (Google Calendar & Tasks), dan integrasi komunikasi WhatsApp kampus memiliki kualitas tinggi, presisi, dan bebas dari halusinasi/bahasa klise AI (*anti-slop*).
 
 ---
 
@@ -15,12 +16,13 @@ Kumpulan **Skill & Standar Operasional Prosedur (SOP) Akademik** untuk AI Agent 
 
 Sering kali hasil generasi AI generik memiliki masalah umum:
 1. ❌ **Format Makalah Hancur:** Margin default US Letter, penomoran bab gaya luar negeri, dan spasi berantakan.
-2. ❌ **Manipulasi Dokumen di Laptop Ribet:** Harus buka aplikasi berat hanya untuk bikin tabel, ganti teks, atau konversi slide.
-3. ❌ **Bot WhatsApp Mudah Diblokir:** Menggunakan engine web/Puppeteer yang menembak pesan instan tanpa simulasi manusia sehingga nomor rawan dibanned Meta.
-4. ❌ **Bahasa Klise (*AI Slop*):** Paragraf selalu diawali *"Dalam era globalisasi yang serba cepat ini..."* atau *"Tak dapat dipungkiri bahwa..."*.
-5. ❌ **Chat Dosen Kaku / Kurang Sopan:** Format pesan kurang mencerminkan etika akademik Indonesia (kurang identitas diri atau waktu yang tepat).
-6. ❌ **Slide Presentasi Terlalu Penuh:** AI menumpuk teks 1 bab ke dalam 1 slide tanpa *speaker notes*.
-7. ❌ **Laporan Praktikum Tanpa Analisis:** Hanya menempelkan kode tanpa analisis alur logika per-blok.
+2. ❌ **Jadwal Bentrok & Terlupa:** Tugas menumpuk tanpa checklist terstruktur, jadwal pergeseran kuliah tidak sinkron ke Google Calendar.
+3. ❌ **Manipulasi Dokumen di Laptop Ribet:** Harus buka aplikasi berat hanya untuk bikin tabel, ganti teks, atau konversi slide.
+4. ❌ **Bot WhatsApp Mudah Diblokir:** Menggunakan engine web/Puppeteer yang menembak pesan instan tanpa simulasi manusia sehingga nomor rawan dibanned Meta.
+5. ❌ **Bahasa Klise (*AI Slop*):** Paragraf selalu diawali *"Dalam era globalisasi yang serba cepat ini..."* atau *"Tak dapat dipungkiri bahwa..."*.
+6. ❌ **Chat Dosen Kaku / Kurang Sopan:** Format pesan kurang mencerminkan etika akademik Indonesia (kurang identitas diri atau waktu yang tepat).
+7. ❌ **Slide Presentasi Terlalu Penuh:** AI menumpuk teks 1 bab ke dalam 1 slide tanpa *speaker notes*.
+8. ❌ **Laporan Praktikum Tanpa Analisis:** Hanya menempelkan kode tanpa analisis alur logika per-blok.
 
 **UNESA Academic Skill Pack menyelesaikan semua masalah di atas secara otomatis.**
 
@@ -30,17 +32,18 @@ Sering kali hasil generasi AI generik memiliki masalah umum:
 
 Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SOUL_TEMPLATE.md) menyuntikkan *soul / persona* yang mengubah AI dari sekadar chatbot korporat pasif menjadi **Personal Academic Second Brain**:
 * 🎯 **Direct & To-The-Point:** Menghilangkan basa-basi pembuka ("Tentu!", "Pertanyaan yang bagus!").
-* ⚡ **Autonomous Execution:** Langsung eksekusi tool, buat file dokumen Word/Excel/PPT, terapkan format, dan serahkan hasil jadi tanpa narasi menggantung.
+* ⚡ **Autonomous Execution:** Langsung eksekusi tool, buat file dokumen Word/Excel/PPT, atur jadwal kalender, terapkan format, dan serahkan hasil jadi tanpa narasi menggantung.
 * 🛡️ **Strict Anti-AI Slop:** Selalu mengawali analisis dengan fakta empiris/data riil lapangan.
 * 💬 **Platform-Aware Formatting:** Otomatis menyesuaikan gaya tulisan dan rumus matematika untuk WhatsApp, Discord, Telegram, dan Terminal.
 
 ---
 
-## 📦 Daftar 8 Skill yang Termasuk
+## 📦 Daftar 9 Skill yang Termasuk
 
 | Nama Skill | Deskripsi & Kegunaan |
 | :--- | :--- |
 | **`unesa-academic-standards`** | Standar penulisan karya ilmiah, makalah, dan skripsi format A4, margin baku (4-4-3-3 / 3-3-3-3), Times New Roman 12 pt spasi 1.5, sitasi APA 7th / IEEE, serta generator file `.docx` otomatis. |
+| **`academic-life-schedule`** | Manajemen jadwal kuliah & kehidupan: sinkronisasi otomatis **Google Calendar** (acara waktu pasti, pergeseran jam kuliah) & **Google Tasks** (deadline penugasan, checklist ujian, buffer perjalanan) dengan pola anti-duplikasi (*upsert*). |
 | **`unesa-wameow-bridge`** | Integrasi WhatsApp AI Bridge berbasis Go `whatsmeow` dengan **Mandatory Human Presence Protocol** (simulasi mengetik 30–100 WPM, auto read receipt, async queue) sehingga **100% aman dari risiko banned/blokir**. |
 | **`unesa-office-engine`** | Manipulasi dan pembuatan berkas **Word (`.docx`)**, **Excel (`.xlsx`)**, dan **PowerPoint (`.pptx`)** langsung di laptop/PC mahasiswa tanpa butuh lisensi Office berat (didukung `officecli` dan fitur *Live Preview* browser). |
 | **`unesa-communication-hub`** | Panduan etika chat dosen (DPA, Dosen Pengampu, Koorprodi), template broadcast Komti/PJ MK ke grup kelas, serta surat izin tidak masuk kuliah/dispensasi. |
@@ -48,6 +51,16 @@ Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SO
 | **`lab-and-coding-practical`** | Standar pengerjaan laporan praktikum laboratorium (Informatika, Elektro, Sains, MIPA) dengan analisis logika kode per-blok dan standar kebersihan Jupyter Notebook (`.ipynb`). |
 | **`smart-study-and-research`** | Framework bedah jurnal ilmiah cepat (SINTA & Scopus), penyusunan sintesis literatur, flashcards konsep, serta bank soal latihan (C3–C5 Problem Solving) untuk persiapan UTS/UAS. |
 | **`unesa-portal-guide`** | Panduan navigasi alur sistem digital kampus UNESA: Siakadu (KRS/KHS), SSO UNESA, Vinesa (LMS Moodle), SiDia (Presensi), dan TEP Pusat Bahasa LPSP. |
+
+---
+
+## 📅 Manajemen Jadwal Akademik & Kehidupan (`academic-life-schedule`)
+
+Mengatur jadwal kuliah, janji temu, dan tenggat waktu secara otomatis:
+* **Google Calendar (Time-Bounded Events):** Jadwal kuliah rutin, kelas pengganti (maju/mundur/daring), ujian, janji bimbingan, rapat kelompok.
+* **Google Tasks (Action & Deadlines):** Deadline pengumpulan tugas, persiapan bahan praktikum, checklist belajar ujian.
+* **Anti-Duplikasi (Strict Upsert):** Tidak membuat event dobel saat ada ralat jadwal — sistem otomatis mem-patch event yang sudah ada.
+* **Panduan Google Cloud Console & OAuth Deployment:** Baca panduan lengkap di **[`docs/GOOGLE_OAUTH_DEPLOYMENT.md`](docs/GOOGLE_OAUTH_DEPLOYMENT.md)** untuk model deployment (Self-Host vs Centralized Project) dan ketentuan Google Verification.
 
 ---
 
@@ -63,17 +76,6 @@ Wameow menggunakan engine Go murni ([github.com/mahdiwafy/wameow](https://github
   - *Tier 1 (Normal):* 65–100 WPM (120–185 ms/karakter).
   - *Tier 2 (Intensif):* 30–50 WPM (240–400 ms/karakter) + jeda sebelum kirim untuk memecah pola robotik.
 * 📦 **Kirim Berkas Tugas Otomatis:** Mendukung pengiriman langsung dokumen `.docx`, `.pdf`, `.xlsx`, `.pptx`, `.zip`, gambar, dan audio lewat endpoint `POST /send-media`.
-
-### Setup Wameow 1-Menit:
-```bash
-# Clone & build binary
-git clone https://github.com/mahdiwafy/wameow.git ~/wameow && cd ~/wameow && go build -o wameow .
-
-# Jalankan
-./wameow --sessions=wa1 --listen=:52135
-
-# Buka browser untuk scan QR pairing: http://localhost:52135/png-qr/wa1
-```
 
 ---
 
@@ -138,25 +140,28 @@ Jika kamu menggunakan web chat biasa (ChatGPT Plus/Free, Claude.ai, Gemini):
 
 Setelah skill terpasang, kamu cukup memberi instruksi sederhana ke AI kamu:
 
-### 1. Membuat Makalah Kuliah
+### 1. Mengatur Jadwal Kuliah & Deadline Tugas
+> *"Dosen mengumumkan kelas Sistem Operasi hari Selasa jam 09.40 WIB dialihkan via Zoom (link: zoom.us/j/xxx). Bantu update Google Calendar dan buatkan deadline tugas resume di Google Tasks untuk hari Jumat jam 23.59 WIB."*
+
+### 2. Membuat Makalah Kuliah
 > *"Buatkan draf BAB I Pendahuluan untuk makalah mata kuliah Sistem Operasi dengan topik 'Analisis Efisiensi Algoritma Penjadwalan CPU'. Terapkan standar unesa-academic-standards lengkap dengan margin dan format heading baku."*
 
-### 2. Mengirim Tugas via WhatsApp Otomatis
+### 3. Mengirim Tugas via WhatsApp Otomatis
 > *"Kirim berkas Makalah_Sistem_Operasi.docx ke nomor WhatsApp 081234567890 lewat Wameow dengan caption yang sopan."*
 
-### 3. Manipulasi File Word/Excel di Laptop
+### 4. Manipulasi File Word/Excel di Laptop
 > *"Bantu buatkan file data_uji.xlsx berisi data hasil benchmarking waktu respon server (10 sampel) lengkap dengan formula rata-rata dan standar deviasi."*
 
-### 4. Menghubungi Dosen Pengampu
+### 5. Menghubungi Dosen Pengampu
 > *"Bantu buatkan chat WhatsApp yang sopan ke Ibu Dosen Dr. Sri Wahyuni untuk menanyakan konfirmasi kelas pengganti hari Rabu jam 10.00 WIB di ruang R.302."*
 
-### 5. Merancang Slide Presentasi & Speaker Notes
+### 6. Merancang Slide Presentasi & Speaker Notes
 > *"Rancang materi presentasi 10 slide tentang 'Keamanan Database Terdistribusi' untuk tugas kelompok. Sertakan poin visual slide dan speaker notes naskah bicaranya."*
 
-### 6. Menyusun Laporan Praktikum
+### 7. Menyusun Laporan Praktikum
 > *"Bantu susun laporan praktikum modul 3 Struktur Data: Binary Search Tree dalam C++. Sertakan penjelasan logika kode per blok dan troubleshooting log-nya."*
 
-### 7. Membedah Paper Jurnal
+### 8. Membedah Paper Jurnal
 > *"Bedah artikel jurnal terlampir ini menggunakan format matrix telaah ilmiah 5 menit (Research gap, metodologi, temuan utama, dan limitasi)."*
 
 ---
