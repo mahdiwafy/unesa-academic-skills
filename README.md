@@ -60,7 +60,9 @@ Mengatur jadwal kuliah, janji temu, dan tenggat waktu secara otomatis:
 * **Google Calendar (Time-Bounded Events):** Jadwal kuliah rutin, kelas pengganti (maju/mundur/daring), ujian, janji bimbingan, rapat kelompok.
 * **Google Tasks (Action & Deadlines):** Deadline pengumpulan tugas, persiapan bahan praktikum, checklist belajar ujian.
 * **Anti-Duplikasi (Strict Upsert):** Tidak membuat event dobel saat ada ralat jadwal — sistem otomatis mem-patch event yang sudah ada.
-* **Panduan Google Cloud Console & OAuth Deployment:** Baca panduan lengkap di **[`docs/GOOGLE_OAUTH_DEPLOYMENT.md`](docs/GOOGLE_OAUTH_DEPLOYMENT.md)** untuk model deployment (Self-Host vs Centralized Project) dan ketentuan Google Verification.
+* **Panduan Praktis Integrasi & OAuth:**
+  - 📖 [Panduan Setup Google Calendar & Tasks untuk Pengguna & Developer](docs/PANDUAN_SETUP_GOOGLE_CALENDAR_DAN_OAUTH.md)
+  - 🔐 [Dokumen Teknis Google Cloud & Ketentuan OAuth Deployment](docs/GOOGLE_OAUTH_DEPLOYMENT.md)
 
 ---
 
