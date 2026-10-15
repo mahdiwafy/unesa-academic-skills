@@ -38,12 +38,13 @@ Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SO
 
 ---
 
-## 📦 Daftar 9 Skill yang Termasuk
+## 📦 Daftar 10 Skill yang Termasuk
 
 | Nama Skill | Deskripsi & Kegunaan |
 | :--- | :--- |
 | **`unesa-academic-standards`** | Standar penulisan karya ilmiah, makalah, dan skripsi format A4, margin baku (4-4-3-3 / 3-3-3-3), Times New Roman 12 pt spasi 1.5, sitasi APA 7th / IEEE, serta generator file `.docx` otomatis. |
 | **`academic-life-schedule`** | Manajemen jadwal kuliah & kehidupan: sinkronisasi otomatis **Google Calendar** (acara waktu pasti, pergeseran jam kuliah) & **Google Tasks** (deadline penugasan, checklist ujian, buffer perjalanan) dengan pola anti-duplikasi (*upsert*). |
+| **`academic-reference-manager`** | Manajemen perpustakaan referensi ilmiah **Mendeley & Zotero**: sinkronisasi metadata jurnal dari DOI, unggah naskah berkas PDF ke cloud, pencarian pustaka, dan ekspor sitasi APA 7th. |
 | **`unesa-wameow-bridge`** | Integrasi WhatsApp AI Bridge berbasis Go `whatsmeow` dengan **Mandatory Human Presence Protocol** (simulasi mengetik 30–100 WPM, auto read receipt, async queue) sehingga **100% aman dari risiko banned/blokir**. |
 | **`unesa-office-engine`** | Manipulasi dan pembuatan berkas **Word (`.docx`)**, **Excel (`.xlsx`)**, dan **PowerPoint (`.pptx`)** langsung di laptop/PC mahasiswa tanpa butuh lisensi Office berat (didukung `officecli` dan fitur *Live Preview* browser). |
 | **`unesa-communication-hub`** | Panduan etika chat dosen (DPA, Dosen Pengampu, Koorprodi), template broadcast Komti/PJ MK ke grup kelas, serta surat izin tidak masuk kuliah/dispensasi. |
@@ -63,6 +64,17 @@ Mengatur jadwal kuliah, janji temu, dan tenggat waktu secara otomatis:
 * **Panduan Praktis Integrasi & OAuth:**
   - 📖 [Panduan Setup Mandiri Google Calendar & Tasks](docs/PANDUAN_SETUP_GOOGLE_CALENDAR_DAN_OAUTH.md)
   - 🔐 [Dokumen Teknis Google Cloud & Ketentuan OAuth Deployment](docs/GOOGLE_OAUTH_DEPLOYMENT.md)
+
+---
+
+## 📚 Manajemen Referensi Ilmiah & Mendeley Cloud (`academic-reference-manager`)
+
+Menghubungkan asisten AI langsung ke akun Mendeley / Zotero mahasiswa:
+* **Ingest Sitasi Otomatis:** Daftarkan metadata artikel jurnal/prosiding/buku dari DOI tanpa ketik manual.
+* **Sinkronisasi Berkas PDF:** Mengunggah file PDF paper langsung ke akun Mendeley (`POST /files`) sehingga langsung sinkron ke aplikasi Mendeley Desktop & Web.
+* **Audit Sitasi Makalah:** Memastikan setiap kutipan dalam teks (*in-text citations*) memiliki entri valid di daftar pustaka sesuai standar APA 7th Edition.
+* **Panduan Praktis Integrasi & OAuth:**
+  - 📖 [Panduan Setup Mandiri Mendeley API & OAuth 2.0](docs/PANDUAN_SETUP_MENDELEY_API_DAN_OAUTH.md)
 
 ---
 

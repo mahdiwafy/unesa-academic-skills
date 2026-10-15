@@ -18,6 +18,11 @@ mkdir -p "$HERMES_SKILLS_DIR"
 echo "📦 Menyalin skill ke $HERMES_SKILLS_DIR..."
 cp -r "$REPO_DIR/skills/"* "$HERMES_SKILLS_DIR/"
 
+# 2b. Siapkan direktori service Mendeley helper di ~/.hermes/mendeley
+mkdir -p "$HOME/.hermes/mendeley"
+cp "$REPO_DIR/skills/academic-reference-manager/scripts/mendeley_service.py" "$HOME/.hermes/mendeley/mendeley_service.py" 2>/dev/null || true
+chmod +x "$HOME/.hermes/mendeley/mendeley_service.py" 2>/dev/null || true
+
 # 3. Beri permission execute pada script pembantu jika ada
 find "$HERMES_SKILLS_DIR" -name "*.py" -exec chmod +x {} + 2>/dev/null || true
 find "$HERMES_SKILLS_DIR" -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
@@ -52,5 +57,6 @@ echo "  6. academic-presentation-mastery - Slide & Speaker Notes"
 echo "  7. lab-and-coding-practical    - Laporan Praktikum & Clean Code"
 echo "  8. smart-study-and-research    - Bedah Jurnal & Bank Soal UTS/UAS"
 echo "  9. unesa-portal-guide          - Panduan Siakadu, Vinesa, SiDia, TEP"
+echo "  10. academic-reference-manager - Manajemen Referensi Mendeley & PDF Sync"
 echo "--------------------------------------------------"
 echo "💡 Jalankan 'hermes' dan panggil skill kapan pun kamu butuh bantuan akademik!"
