@@ -1,0 +1,16 @@
+{
+  "authuser": "mahasiswa@mhs.unesa.ac.id",
+  "student": {
+    "name": "Nama Mahasiswa",
+    "nim": "26050974001",
+    "prodi": "Pendidikan Teknologi Informasi",
+    "angkatan": "2026",
+    "kelas": "2026C"
+  },
+  "answers": {
+    "entry.1000001": "Nama Mahasiswa",
+    "entry.1000002": "26050974001",
+    "entry.1000003": "Pendidikan Teknologi Informasi",
+    "entry.1000004": "Hadir"
+  }
+}

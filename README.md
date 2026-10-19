@@ -38,13 +38,14 @@ Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SO
 
 ---
 
-## 📦 Daftar 10 Skill yang Termasuk
+## 📦 Daftar 11 Skill yang Termasuk
 
 | Nama Skill | Deskripsi & Kegunaan |
 | :--- | :--- |
 | **`unesa-academic-standards`** | Standar penulisan karya ilmiah, makalah, dan skripsi format A4, margin baku (4-4-3-3 / 3-3-3-3), Times New Roman 12 pt spasi 1.5, sitasi APA 7th / IEEE, serta generator file `.docx` otomatis. |
 | **`academic-life-schedule`** | Manajemen jadwal kuliah & kehidupan: sinkronisasi otomatis **Google Calendar** (acara waktu pasti, pergeseran jam kuliah) & **Google Tasks** (deadline penugasan, checklist ujian, buffer perjalanan) dengan pola anti-duplikasi (*upsert*). |
 | **`academic-reference-manager`** | Manajemen perpustakaan referensi ilmiah **Mendeley & Zotero**: sinkronisasi metadata jurnal dari DOI, unggah naskah berkas PDF ke cloud, pencarian pustaka, dan ekspor sitasi APA 7th. |
+| **`academic-forms-automation`** | Otomasi Google Forms kampus: inspeksi schema, pembuatan **Cloud Draft Autosave** (tersimpan di akun Google via Chrome CDP), generator **Prefilled URL** kilat (`usp=pp_url`), dan upload berkas tugas. |
 | **`unesa-wameow-bridge`** | Integrasi WhatsApp AI Bridge berbasis Go `whatsmeow` dengan **Mandatory Human Presence Protocol** (simulasi mengetik 30–100 WPM, auto read receipt, async queue) sehingga **100% aman dari risiko banned/blokir**. |
 | **`unesa-office-engine`** | Manipulasi dan pembuatan berkas **Word (`.docx`)**, **Excel (`.xlsx`)**, dan **PowerPoint (`.pptx`)** langsung di laptop/PC mahasiswa tanpa butuh lisensi Office berat (didukung `officecli` dan fitur *Live Preview* browser). |
 | **`unesa-communication-hub`** | Panduan etika chat dosen (DPA, Dosen Pengampu, Koorprodi), template broadcast Komti/PJ MK ke grup kelas, serta surat izin tidak masuk kuliah/dispensasi. |
@@ -75,6 +76,19 @@ Menghubungkan asisten AI langsung ke akun Mendeley / Zotero mahasiswa:
 * **Audit Sitasi Makalah:** Memastikan setiap kutipan dalam teks (*in-text citations*) memiliki entri valid di daftar pustaka sesuai standar APA 7th Edition.
 * **Panduan Praktis Integrasi & OAuth:**
   - 📖 [Panduan Setup Mandiri Mendeley API & OAuth 2.0](docs/PANDUAN_SETUP_MENDELEY_API_DAN_OAUTH.md)
+
+---
+
+## 📝 Otomasi Google Forms & Cloud Draft (`academic-forms-automation`)
+
+Menangani formulir Google Forms kampus secara fleksibel dengan arsitektur **Dual-Engine**:
+* **Mode 1: Cloud Draft Autosave (via Chrome CDP :9222):**
+  - **Draf Tersimpan Otomatis:** Mengisi formulir melalui browser aktif hingga indikator Google berganti menjadi *"Draf disimpan"*. Saat link dibuka di smartphone atau laptop dengan akun Google yang sama, seluruh kolom sudah terisi rapi.
+  - **Upload Berkas Tugas:** Otomatis memilih dan mengunggah berkas naskah PDF/Word ke Google Picker.
+  - **Akun SSO Terikat:** Injeksi parameter `authuser` untuk memastikan respons tercatat di akun kampus resmi.
+* **Mode 2: Instant Prefilled URL (`usp=pp_url`):**
+  - **Ultra-Cepat (~300ms):** Mengekstrak `FB_PUBLIC_LOAD_DATA_` via HTTP GET ringan tanpa membuka browser, dan menghasilkan tautan berparameter yang siap ditinjau dan dikirim dalam 1 klik.
+* **Ekstraksi Link Onboarding:** Otomatis mengambil tautan undangan grup WhatsApp (`chat.whatsapp.com`) dari halaman konfirmasi respons.
 
 ---
 
@@ -177,6 +191,9 @@ Setelah skill terpasang, kamu cukup memberi instruksi sederhana ke AI kamu:
 
 ### 8. Membedah Paper Jurnal
 > *"Bedah artikel jurnal terlampir ini menggunakan format matrix telaah ilmiah 5 menit (Research gap, metodologi, temuan utama, dan limitasi)."*
+
+### 9. Mengisi Formulir & Menyimpan Cloud Draft
+> *"Tolong isikan formulir presensi kuliah ini: https://forms.gle/contohLink. Gunakan mode draf agar tersimpan di akun Google-ku, dan lampirkan file tugas /home/user/laporan.pdf jika ada pertanyaan upload berkas."*
 
 ---
 
