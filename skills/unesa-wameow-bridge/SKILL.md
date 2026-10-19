@@ -32,34 +32,53 @@ Wameow menerapkan pipeline simulasi manusia secara otomatis pada setiap pesan ke
 
 ## ⚡ 2. Setup Cepat Wameow di Server / Laptop
 
-### A. Repositori Source Code Wameow
-Wameow dibangun dengan bahasa Go dan single binary ringan (<20 MB, konsumsi RAM <100 MB).
-* **Repository:** [https://github.com/mahdiwafy/wameow](https://github.com/mahdiwafy/wameow)
+* **Repository Resmi:** [https://github.com/mahdiwafy/wameow](https://github.com/mahdiwafy/wameow)
+* **Panduan Lengkap Setup & Pairing:** Lihat [docs/PANDUAN_SETUP_WAMEOW_WHATSAPP_AI.md](../../docs/PANDUAN_SETUP_WAMEOW_WHATSAPP_AI.md)
 
-### B. Cara Build & Menjalankan Wameow
+### Langkah Ringkas Menjalankan:
 ```bash
-# 1. Clone repository
+# 1. Clone & Build
 git clone https://github.com/mahdiwafy/wameow.git ~/wameow
-cd ~/wameow
+cd ~/wameow && go build -o wameow .
 
-# 2. Build binary Go
-go build -o wameow .
+# 2. Jalankan Wameow
+./wameow --sessions=wa1 --listen=:52135
 
-# 3. Jalankan Wameow (Contoh dengan 1 session 'wa1')
-./wameow \
-  --sessions=wa1 \
-  --listen=:52135
+# 3. Pairing: Buka browser di http://localhost:52135/png-qr/wa1 lalu scan via WhatsApp HP
 ```
-
-### C. Pairing WhatsApp (Scan QR 1-Klik)
-1. Buka browser di laptop/PC: `http://localhost:52135/png-qr/wa1`
-2. Buka WhatsApp di HP -> Perangkat Tertaut (Linked Devices) -> Tautkan Perangkat.
-3. Scan QR Code yang muncul di layar browser.
-4. Selesai! WhatsApp sudah terhubung permanen di database SQLite `wameow.db`.
 
 ---
 
-## 📡 3. REST API Cheat-Sheet untuk AI Agent
+## 🤖 3. Cara AI Agent Menjalankan Wameow Secara Langsung
+
+AI Agent (Hermes Agent, Claude Code, Cursor) dapat mengeksekusi pengiriman pesan dan berkas secara instan menggunakan script pembantu `wameow_tool.py` di dalam folder `scripts/`:
+
+### A. Periksa Status Koneksi WhatsApp
+```bash
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py status
+# Menghasilkan exit code 0 dan output JSON {"status": "connected"} jika siap pakai
+```
+
+### B. Kirim Pesan Teks Asinkron (Anti-Banned)
+```bash
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py send "081234567890" "Halo! Draf tugas sudah selesai dibuat."
+```
+*Script otomatis mengonversi format nomor lokal `08xxx` menjadi format internasional WhatsApp `628xxx` dan menembak endpoint `/send-async`.*
+
+### C. Kirim Berkas Tugas / Dokumen Akademik
+```bash
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py send-file "081234567890" "/path/to/Makalah_Final.docx" --caption "Berikut draf makalahnya yaa"
+```
+*Script otomatis mendeteksi MIME type untuk DOCX, XLSX, PPTX, PDF, ZIP, PNG, JPG.*
+
+### D. Cari Riwayat Obrolan
+```bash
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py search "tugas sistem operasi"
+```
+
+---
+
+## 📡 4. REST API Reference (Direct cURL / HTTP Requests)
 
 Base URL: `http://localhost:52135`
 

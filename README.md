@@ -38,7 +38,7 @@ Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SO
 
 ---
 
-## 📦 Daftar 11 Skill yang Termasuk
+## 📦 Daftar 12 Skill yang Termasuk
 
 | Nama Skill | Deskripsi & Kegunaan |
 | :--- | :--- |
@@ -46,6 +46,7 @@ Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SO
 | **`academic-life-schedule`** | Manajemen jadwal kuliah & kehidupan: sinkronisasi otomatis **Google Calendar** (acara waktu pasti, pergeseran jam kuliah) & **Google Tasks** (deadline penugasan, checklist ujian, buffer perjalanan) dengan pola anti-duplikasi (*upsert*). |
 | **`academic-reference-manager`** | Manajemen perpustakaan referensi ilmiah **Mendeley & Zotero**: sinkronisasi metadata jurnal dari DOI, unggah naskah berkas PDF ke cloud, pencarian pustaka, dan ekspor sitasi APA 7th. |
 | **`academic-forms-automation`** | Otomasi Google Forms kampus: inspeksi schema, pembuatan **Cloud Draft Autosave** (tersimpan di akun Google via Chrome CDP), generator **Prefilled URL** kilat (`usp=pp_url`), dan upload berkas tugas. |
+| **`academic-memory-engine`** | Arsitektur otak kedua permanen: integrasi **Mnemosyne** (ingatan jangka panjang profil/matkul/dosen) & **Hermes LCM** (kompresi percakapan konteks panjang 60–80% hemat token) berbasis pencarian semantik. |
 | **`unesa-wameow-bridge`** | Integrasi WhatsApp AI Bridge berbasis Go `whatsmeow` dengan **Mandatory Human Presence Protocol** (simulasi mengetik 30–100 WPM, auto read receipt, async queue) sehingga **100% aman dari risiko banned/blokir**. |
 | **`unesa-office-engine`** | Manipulasi dan pembuatan berkas **Word (`.docx`)**, **Excel (`.xlsx`)**, dan **PowerPoint (`.pptx`)** langsung di laptop/PC mahasiswa tanpa butuh lisensi Office berat (didukung `officecli` dan fitur *Live Preview* browser). |
 | **`unesa-communication-hub`** | Panduan etika chat dosen (DPA, Dosen Pengampu, Koorprodi), template broadcast Komti/PJ MK ke grup kelas, serta surat izin tidak masuk kuliah/dispensasi. |
@@ -92,6 +93,20 @@ Menangani formulir Google Forms kampus secara fleksibel dengan arsitektur **Dual
 
 ---
 
+## 🧠 Otak Kedua Permanen: Hermes LCM & Mnemosyne (`academic-memory-engine`)
+
+Menjadikan AI Agent sebagai **Academic Second Brain sejati** yang tidak pernah lupa dengan arsitektur memori dua tingkat:
+* **1. Mnemosyne (Memori Permanen Lintas Sesi):**
+  - **Three-Tier Architecture:** Menyimpan data statis mahasiswa (NIM, Prodi, Dosen PA), relasi kelompok tugas, dan aturan dosen ke database SQLite lokal + Hybrid Search (vektor semantik + FTS5).
+  - **Zero Amnesia:** Fakta penting tetap diingat selamanya bahkan setelah perintah `/new`, ganti hari, atau server reboot.
+* **2. Hermes LCM (Long Context Memory):**
+  - **Pohon Kompresi DAG:** Mengompres riwayat percakapan panjang (revisi tugas berjam-jam) secara otomatis, menghemat 60–80% token LLM tanpa kehilangan detail argumen atau kode penting.
+  - **Semantic Retrieval (`lcm_grep` & `lcm_recall`):** Memanggil kembali pesan dari masa lalu dalam hitungan milidetik.
+* **Panduan Lengkap Setup & Instalasi:**
+  - 📖 [Panduan Lengkap Setup Hermes LCM & Mnemosyne](docs/PANDUAN_SETUP_HERMES_LCM_DAN_MNEMOSYNE.md)
+
+---
+
 ## 📱 WhatsApp AI Bridge Anti-Banned (`unesa-wameow-bridge`)
 
 Wameow menggunakan engine Go murni ([github.com/mahdiwafy/wameow](https://github.com/mahdiwafy/wameow)) yang berjalan super ringan (RAM <100 MB).
@@ -103,7 +118,9 @@ Wameow menggunakan engine Go murni ([github.com/mahdiwafy/wameow](https://github
   - *Tier 0 (Santai):* 350–900 ms (mirip paste link/teks).
   - *Tier 1 (Normal):* 65–100 WPM (120–185 ms/karakter).
   - *Tier 2 (Intensif):* 30–50 WPM (240–400 ms/karakter) + jeda sebelum kirim untuk memecah pola robotik.
-* 📦 **Kirim Berkas Tugas Otomatis:** Mendukung pengiriman langsung dokumen `.docx`, `.pdf`, `.xlsx`, `.pptx`, `.zip`, gambar, dan audio lewat endpoint `POST /send-media`.
+* 📦 **Kirim Berkas Tugas Otomatis:** Mendukung pengiriman langsung dokumen `.docx`, `.pdf`, `.xlsx`, `.pptx`, `.zip`, gambar, dan audio lewat script CLI `wameow_tool.py` atau endpoint `POST /send-media`.
+* **Panduan Lengkap Setup & Pairing 1-Klik:**
+  - 📖 [Panduan Lengkap Setup Wameow WhatsApp AI](docs/PANDUAN_SETUP_WAMEOW_WHATSAPP_AI.md)
 
 ---
 
@@ -194,6 +211,9 @@ Setelah skill terpasang, kamu cukup memberi instruksi sederhana ke AI kamu:
 
 ### 9. Mengisi Formulir & Menyimpan Cloud Draft
 > *"Tolong isikan formulir presensi kuliah ini: https://forms.gle/contohLink. Gunakan mode draf agar tersimpan di akun Google-ku, dan lampirkan file tugas /home/user/laporan.pdf jika ada pertanyaan upload berkas."*
+
+### 10. Mengingat Preferensi & Konteks Tugas (Second Brain)
+> *"Ingat ya, Dosen Pengampu Basis Data (Pak Made) mewajibkan laporan praktikum diketik dengan font Arial 11 spasi 1.15. Simpan ini ke memori permanen agar semua laporan ke depan otomatis memakai aturan ini."*
 
 ---
 
