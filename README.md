@@ -34,6 +34,7 @@ Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SO
 * 🎯 **Direct & To-The-Point:** Menghilangkan basa-basi pembuka ("Tentu!", "Pertanyaan yang bagus!").
 * ⚡ **Autonomous Execution:** Langsung eksekusi tool, buat file dokumen Word/Excel/PPT, atur jadwal kalender, terapkan format, dan serahkan hasil jadi tanpa narasi menggantung.
 * 🛡️ **Strict Anti-AI Slop:** Selalu mengawali analisis dengan fakta empiris/data riil lapangan.
+* 📦 **Anti-Truncation & Output Limit Awareness:** Kebal dari batas token output provider/model (seperti **Cloudify** atau **Gemini 3.8**). Menerapkan doktrin *Artifact-First*—menulis dokumen makalah panjang langsung ke berkas fisik (`.docx`/`.pdf`), bukan mencetaknya di chat, sehingga tidak pernah terpotong di tengah jalan.
 * 💬 **Platform-Aware Formatting:** Otomatis menyesuaikan gaya tulisan dan rumus matematika untuk WhatsApp, Discord, Telegram, dan Terminal.
 
 ---
@@ -157,6 +158,16 @@ rm -rf /tmp/unesa-pack
 ```
 
 *Installer akan otomatis menyalin seluruh skill dan menyiapkan template `SOUL.md` akademik jika belum ada.*
+
+> 💡 **Tips Pengguna Provider Cloudify & Gemini 3.8 (Anti-Truncation):**
+> Model penalaran seperti **Gemini 3.8 Flash** membagi jatah output token antara proses berpikir internal (*thinking tokens*) dan teks jawaban. Jika menggunakan provider seperti **Cloudify**, pastikan konfigurasi `~/.hermes/config.yaml` Anda menyetel batas output token yang optimal agar tidak terjadi *budget exhaustion*:
+> ```yaml
+> model:
+>   default: ag/gemini-3.8-flash-high  # Atau model pilihan Anda
+>   provider: custom:cloudify
+>   max_tokens: 65535                   # Alokasi maksimum output token
+> ```
+> Ditambah persona `SOUL_TEMPLATE.md` di atas, agen Anda otomatis mengalihkan penulisan naskah panjang langsung ke berkas (`.docx`, `.xlsx`, `.pdf`) sehingga dijamin **100% bebas dari risiko terpotong di tengah jalan**.
 
 ---
 
