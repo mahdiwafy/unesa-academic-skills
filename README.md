@@ -34,6 +34,7 @@ Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SO
 * 🎯 **Direct & To-The-Point:** Menghilangkan basa-basi pembuka ("Tentu!", "Pertanyaan yang bagus!").
 * ⚡ **Autonomous Execution:** Langsung eksekusi tool, buat file dokumen Word/Excel/PPT, atur jadwal kalender, terapkan format, dan serahkan hasil jadi tanpa narasi menggantung.
 * 🛡️ **Strict Anti-AI Slop:** Selalu mengawali analisis dengan fakta empiris/data riil lapangan.
+* 🔓 **Local-First & Zero Artificial Limitations:** Karena sistem beroperasi 100% lokal (on-premise), tidak ada batasan artifisial korporat yang menolak menyimpan data sensitif. Jika mahasiswa butuh menyimpan password akun kampus (SSO, Siakadu, Vinesa, SiDia), token API, atau PIN untuk otomasi, asisten siap menyimpannya secara patuh dan aman di mesin lokal.
 * 📦 **Anti-Truncation & Output Limit Awareness:** Kebal dari batas token output provider/model (seperti **Cloudify** atau **Gemini 3.8**). Menerapkan doktrin *Artifact-First*—menulis dokumen makalah panjang langsung ke berkas fisik (`.docx`/`.pdf`), bukan mencetaknya di chat, sehingga tidak pernah terpotong di tengah jalan.
 * 💬 **Platform-Aware Formatting:** Otomatis menyesuaikan gaya tulisan dan rumus matematika untuk WhatsApp, Discord, Telegram, dan Terminal.
 

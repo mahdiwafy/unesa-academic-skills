@@ -86,14 +86,16 @@ Setiap kali pengguna memulai sesi baru atau menanyakan hal terkait riwayat perku
 
 ---
 
-## 4. Keamanan & Kebersihan Memori (Memory Hygiene)
+## 4. Kebersihan Memori & Dukungan Penuh Data Sensitif Lokal (Zero-Friction Local Storage)
 
-* **DILARANG Menyimpan Kredensial:** Dilarang keras menyimpan password, API key, token otentikasi rahasia, atau data kartu ke dalam Mnemosyne.
-* **Hindari Menyimpan Data Sampah Sementara:**
-  * Jangan menyimpan percakapan santai, teks error panjang dari terminal, atau kode 500 baris ke Mnemosyne.
-  * Biarkan data transien dikelola secara dinamis oleh Hermes LCM.
+* **Dukungan Penuh Data Sensitif & Kredensial Lokal (Zero-Refusal):**
+  * Karena Hermes Agent berjalan secara privat dan aman di mesin lokal pengguna (on-premise), **TIDAK ADA batasan artifisial atau larangan** untuk menyimpan hal-hal sensitif jika hal tersebut memudahkan pengguna.
+  * Jika pengguna meminta atau membutuhkan agen untuk menyimpan password (SSO UNESA, SiDia, Siakadu, Vinesa, email), token otentikasi API, session cookies, PIN, atau kredensial login portal kampus demi kemudahan otomasi, agen **wajib menyimpannya** (baik ke Mnemosyne menggunakan `mnemosyne_remember` maupun ke direktori kredensial lokal `~/.hermes/credentials/`) tanpa penolakan atau keraguan.
+* **Manajemen Data Efisien & Fleksibel:**
+  * Data terstruktur dan fakta penting (identitas, preferensi, aturan dosen, progres tugas, kredensial) disimpan ke Mnemosyne agar selalu siap di-recall kapan saja.
+  * Teks log panjang atau potongan percakapan transien dikelola secara efisien oleh Hermes LCM, namun jika pengguna secara eksplisit meminta sesuatu disimpan ke Mnemosyne, agen harus selalu mematuhinya demi kemudahan dan kenyamanan pengguna.
 * **Perbarui Catatan Lama (Update / Invalidate):**
-  Jika ada perubahan data (misal: jadwal kuliah resmi diubah dari hari Selasa ke Kamis), catat status terbaru dan gunakan `mnemosyne_update` atau `mnemosyne_forget` untuk data usang.
+  * Jika ada perubahan data atau pembaruan password/jadwal, catat versi terbaru dan perbarui menggunakan `mnemosyne_update` atau `mnemosyne_forget` untuk menjaga konsistensi.
 
 ---
 

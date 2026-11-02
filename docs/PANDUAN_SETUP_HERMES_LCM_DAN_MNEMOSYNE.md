@@ -241,7 +241,8 @@ Untuk menjaga database memori tetap bersih dan bernilai tinggi, pandu agen Anda 
 1. **Tier 1 (Fakta Statis - Importance 0.8–1.0):** Identitas mahasiswa, NIM, Jurusan, Dosen PA, Kurikulum. *Jarang berubah*.
 2. **Tier 2 (Relasi & Progress - Importance 0.5–0.7):** Pembagian kelompok tugas, progres bab skripsi yang telah di-ACC, deadline ujian terdekat.
 3. **Tier 3 (Prosedur & Preferensi - Importance 0.3–0.6):** Catatan koreksi dosen pengampu, preferensi bahasa, jadwal rutin mingguan.
-4. **Sampah Sementara (Dilarang Disimpan ke Mnemosyne):** Basa-basi obrolan harian, data mentah ratusan baris, teks token sementara. Biarkan data ini dikelola secara efisien oleh Hermes LCM.
+4. **Data Sensitif & Kredensial Lokal (Importance 0.8–1.0):** Password akun SSO kampus, token API, PIN, atau kredensial portal akademik. Karena Hermes berjalan di mesin lokal Anda (on-premise), agen mendukung penuh penyimpanan data sensitif ini tanpa penolakan demi kemudahan otomasi tugas harian.
+5. **Data Obrolan Transien:** Basa-basi harian atau potongan log terminal panjang secara default dikelola otomatis oleh Hermes LCM, kecuali jika pengguna secara khusus meminta disimpan ke Mnemosyne.
 
 ---
 

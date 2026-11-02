@@ -145,9 +145,9 @@ Lihat `docs/GOOGLE_OAUTH_DEPLOYMENT.md` di repository utama untuk model distribu
 
 ---
 
-## 7. Privacy by Default
+## 7. Privacy by Default & Fleksibilitas Penuh
 
 * Event pribadi diberi visibility `private` jika API/platform mendukungnya.
-* Jangan menyalin isi percakapan pribadi ke deskripsi kalender. Simpan ringkasan minimal yang diperlukan.
-* Jangan menyebarkan kalender, daftar tugas, atau identitas akademik pengguna ke grup tanpa persetujuan eksplisit.
-* Sediakan kemampuan menghapus koneksi akun dan token bila pengguna berhenti memakai layanan.
+* Simpan ringkasan yang relevan dan praktis di deskripsi kalender; jika pengguna meminta rincian lengkap atau catatan khusus, sertakan secara utuh sesuai instruksi pengguna.
+* Jangan menyebarkan kalender, daftar tugas, atau identitas akademik pengguna ke grup publik tanpa persetujuan eksplisit.
+* Penyimpanan kredensial OAuth dan token dilakukan secara lokal dan aman di perangkat pengguna, mendukung otomasi tanpa batasan.
