@@ -121,6 +121,9 @@ Wameow menggunakan engine Go murni ([github.com/mahdiwafy/wameow](https://github
   - *Tier 1 (Normal):* 65–100 WPM (120–185 ms/karakter).
   - *Tier 2 (Intensif):* 30–50 WPM (240–400 ms/karakter) + jeda sebelum kirim untuk memecah pola robotik.
 * 📦 **Kirim Berkas Tugas Otomatis:** Mendukung pengiriman langsung dokumen `.docx`, `.pdf`, `.xlsx`, `.pptx`, `.zip`, gambar, dan audio lewat script CLI `wameow_tool.py` atau endpoint `POST /send-media`.
+* ⏰ **Keep-Alive Heartbeat Ping:** Dilengkapi cron otomatis tengah malam (00:00 WIB via `/ping`) ke grup khusus atau chat sendiri agar koneksi WhatsApp di HP/server tidak pernah terputus secara sepihak.
+* 🕵️ **WhatsApp Message Forensics:** Menerapkan *Zero-Purge Local Archiving* di SQLite. Saat lawan bicara menarik pesan (*"Delete for Everyone"*), pesan asli dan stiker/media tetap tersimpan 100% utuh di `wameow.db` dan dapat diinspeksi via `wameow_tool.py forensics`.
+* 🌐 **Visual QR Pairing Web Page:** Halaman scan QR web interaktif di `http://localhost:52135/scan/<session>` dengan auto-refresh 3 detik sehingga pairing dari HP sangat mudah.
 * **Panduan Lengkap Setup & Pairing 1-Klik:**
   - 📖 [Panduan Lengkap Setup Wameow WhatsApp AI](docs/PANDUAN_SETUP_WAMEOW_WHATSAPP_AI.md)
 
@@ -149,16 +152,33 @@ curl -fsSL https://d.officecli.ai/install.sh | bash
 
 ### 1. Pengguna Hermes Agent (Direkomendasikan ⚡)
 
-Jika kamu menggunakan **Hermes Agent**, jalankan perintah satu baris berikut di terminal:
+> 🤖 **PERINGATAN KHUSUS UNTUK AI AGENT (ZERO-HALLUCINATION DIRECTIVE):**
+> Jika Anda adalah AI Agent yang membaca repositori ini atau diminta pengguna untuk memasangnya:
+> 1. **DILARANG KERAS** mengklaim bahwa Mnemosyne, Hermes LCM, atau Wameow sudah aktif jika belum melakukan verifikasi nyata!
+> 2. Jalankan `python3 scripts/verify_setup.py` untuk memeriksa status aktual sistem.
+> 3. Jika komponen belum terpasang, jalankan instalasi penuh di bawah ini dan laporkan hasil faktualnya dengan jujur.
+
+Jalankan perintah satu baris berikut di terminal untuk **instalasi otonom penuh** (Skills + Wameow + Mnemosyne + Hermes LCM + WhatsApp Keep-Alive Ping):
 
 ```bash
-# Clone dan pasang langsung ke folder ~/.hermes/skills/
+# Clone dan jalankan installer otomatis
 git clone https://github.com/mahdiwafy/unesa-academic-skills.git /tmp/unesa-pack && \
-bash /tmp/unesa-pack/install.sh && \
+bash /tmp/unesa-pack/install.sh --full && \
 rm -rf /tmp/unesa-pack
 ```
 
-*Installer akan otomatis menyalin seluruh skill dan menyiapkan template `SOUL.md` akademik jika belum ada.*
+*Installer secara cerdas akan:*
+1. Menyalin 12 skill akademik ke `~/.hermes/skills/academic/`.
+2. Menyiapkan memori jangka panjang **Mnemosyne** (`mnemosyne-memory`, `mnemosyne-hermes`, dan config).
+3. Mengunduh dan mengonfigurasi kompresi konteks **Hermes LCM** di `~/.hermes/plugins/hermes-lcm`.
+4. Meng-clone & build engine **Wameow** di `~/wameow` (Go).
+5. Mengonfigurasi **Midnight Ping Cron** (00:00 WIB via `/ping`) agar koneksi WhatsApp di HP tidak pernah putus.
+6. Memvalidasi seluruh komponen melalui **Reality-Check Verification** (`scripts/verify_setup.py`).
+
+Untuk memverifikasi status instalasi kapan saja:
+```bash
+python3 scripts/verify_setup.py
+```
 
 > 💡 **Tips Pengguna Provider Cloudify & Gemini 3.8 (Anti-Truncation):**
 > Model penalaran seperti **Gemini 3.8 Flash** membagi jatah output token antara proses berpikir internal (*thinking tokens*) dan teks jawaban. Jika menggunakan provider seperti **Cloudify**, pastikan konfigurasi `~/.hermes/config.yaml` Anda menyetel batas output token yang optimal agar tidak terjadi *budget exhaustion*:

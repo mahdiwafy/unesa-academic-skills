@@ -95,8 +95,8 @@ systemctl --user status wameow
 Wameow menggunakan protokol resmi WhatsApp Multi-Device. Anda cukup menautkan nomor sekali saja:
 
 1. **Buka Browser di Laptop/PC:**
-   Akses alamat: `http://localhost:52135/png-qr/wa1`
-   *(Gambar QR Code resmi WhatsApp akan muncul di layar)*
+   Akses halaman pairing interaktif: `http://localhost:52135/scan/wa1`
+   *(Atau format gambar mentah di `http://localhost:52135/png-qr/wa1`. Halaman `/scan/` otomatis me-refresh QR code tiap 3 detik hingga terhubung)*
 2. **Scan dari Smartphone:**
    * Buka aplikasi **WhatsApp** di HP Anda.
    * Masuk ke menu **Setelan (Settings)** atau ikon **Titik Tiga (⋮)** di pojok kanan atas.
@@ -174,3 +174,34 @@ curl -X POST http://localhost:52135/send-media \
    * Gunakan untuk komunikasi kuliah, tugas kelompok, broadcast grup kelas (Komti/PJ), atau asisten pribadi.
 3. **Bagaimana jika Wameow terputus?**
    Wameow memiliki fitur *auto-reconnect*. Jika sesi kedaluwarsa setelah berbulan-bulan tidak digunakan, cukup buka kembali `http://localhost:52135/png-qr/wa1` dan scan ulang QR code.
+
+---
+
+## ⏰ 6️⃣ LANGKAH 5: Setup Keep-Alive Heartbeat Cron (Midnight Ping)
+
+Server WhatsApp (Meta) dapat memutus sesi WebSocket jika perangkat terlalu lama tidak melakukan transmisi data. Untuk menjaga sesi tetap aktif 24/7 tanpa risiko terputus mendadak, pasang **Midnight Ping Cron**:
+
+### Cara Cepat Menyiapkan (1-Klik):
+```bash
+python3 skills/unesa-wameow-bridge/scripts/setup_keepalive.py
+```
+Script ini akan:
+1. Menanyakan destinasi ping:
+   - **Grup Khusus (Recommended):** Buat grup WhatsApp baru (misal `"Ping Connection"`), masukkan bot, lalu gunakan ID grup (`120363xxx@g.us`).
+   - **Chat Diri Sendiri (Self-Chat):** Gunakan nomor bot/pribadi (`<nomor>@s.whatsapp.net`).
+2. Menghasilkan script `~/.hermes/scripts/wameow-ping.sh`.
+3. Mendaftarkan jadwal cron otomatis setiap tengah malam pukul **00:00 WIB** (`0 0 * * *`) ke Hermes cron atau sistem crontab Linux.
+
+---
+
+## 🕵️ 7️⃣ LANGKAH 6: WhatsApp Message Forensics (Inspeksi Pesan Ditarik)
+
+Wameow mengarsipkan seluruh pesan masuk dan keluar ke database SQLite lokal `~/wameow/wameow.db`:
+* **Zero-Purge Policy:** Ketika seseorang menghapus pesan (*"Tarik Pesan" / "Delete for Everyone"*), WhatsApp mengirimkan sinyal protokol `ProtocolMessage_REVOKE`. Wameow mencatat sinyal ini sebagai entri audit baru bertipe `revoke`, tetapi **TIDAK PERNAH menghapus pesan asli** dari database.
+* **Auto-Download Stiker & Media:** Stiker WebP dan media langsung diunduh ke direktori `~/wameow/media/<session>/` saat pesan masuk, sehingga tetap terselamatkan meskipun pesan ditarik beberapa detik kemudian.
+
+### Cara Cepat Memeriksa Pesan yang Ditarik:
+```bash
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py forensics --limit 10
+```
+Output akan menampilkan waktu penarikan pesan, nama pengirim, dan teks/media asli yang telah dihapus.

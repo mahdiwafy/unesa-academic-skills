@@ -76,6 +76,23 @@ python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py send-file "08123456789
 python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py search "tugas sistem operasi"
 ```
 
+### E. Keep-Alive Heartbeat Ping (Cegah Disconnect)
+```bash
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py ping
+```
+
+### F. WhatsApp Forensics (Inspeksi Pesan Ditarik / Dihapus)
+```bash
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py forensics --limit 10
+```
+*Wameow mengarsipkan seluruh pesan masuk ke SQLite. Saat pengirim menghapus pesan untuk semua orang ("Delete for Everyone / Tarik Pesan"), Wameow mencatat event revoke namun **TIDAK PERNAH menghapus pesan aslinya** dari database! Isi pesan teks, file stiker WebP, atau media yang ditarik tetap 100% terselamatkan.*
+
+### G. Scan QR Pairing Visual di Browser
+```bash
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py scan-url --session wa1
+# Buka link yang dihasilkan (http://localhost:52135/scan/wa1) di browser HP/laptop
+```
+
 ---
 
 ## 📡 4. REST API Reference (Direct cURL / HTTP Requests)
@@ -159,3 +176,57 @@ AI Agent dapat langsung:
 2. Menghasilkan draf rangkuman terstruktur menggunakan skill `smart-study-and-research`.
 3. Mengonversi menjadi dokumen PDF/Word rapi menggunakan `unesa-academic-standards`.
 4. Mengirim balik dokumen PDF ke WhatsApp teman tersebut via `POST /send-media` dengan simulasi human presence lengkap.
+
+---
+
+## ⏰ 6. WhatsApp Keep-Alive Heartbeat Cron (Midnight Ping)
+
+Server WhatsApp (Meta) dapat memutus sesi WebSocket jika perangkat terlalu lama pasif (*idle timeout*). Untuk menjaga sesi tetap aktif dan terhindar dari putus koneksi mendadak, pasang **Midnight Ping Cron** setiap pukul 00:00 malam WIB:
+
+### A. Panduan Destinasi Target Ping:
+Agar tidak mengganggu kontak orang lain, arahkan ping ke:
+1. **Grup Khusus (Recommended):** Buat grup WhatsApp baru (misal: `"Ping Connection"`), masukkan bot, lalu ambil ID grupnya (contoh: `120363xxx@g.us`).
+2. **Chat ke Nomor Sendiri (Self-Chat):** Gunakan nomor WhatsApp sendiri (contoh: `628xxx@s.whatsapp.net`).
+
+### B. Setup 1-Klik via CLI:
+```bash
+python3 skills/unesa-wameow-bridge/scripts/setup_keepalive.py
+```
+Script ini akan:
+1. Menguji koneksi sesi WhatsApp aktif di Wameow.
+2. Membuat executable `~/.hermes/scripts/wameow-ping.sh`.
+3. Mendaftarkan cronjob harian otomatis pukul 00:00 WIB (`0 0 * * *`) ke Hermes cron atau sistem crontab Linux.
+
+---
+
+## 🕵️ 7. WhatsApp Message Forensics (Inspeksi Pesan Ditarik & Media Abadi)
+
+Wameow mengadopsi prinsip **Zero-Purge Local Archiving**:
+
+1. **Bagaimana Pesan Dihapus di WhatsApp?**
+   - Ketika lawan bicara menghapus pesan (*"Tarik Pesan" / "Delete for Everyone"*), WhatsApp mengirimkan stanza protokol khusus `ProtocolMessage` bertipe `REVOKE` (`edit="7"`).
+   - Wameow menangkap sinyal ini dan mencatatnya sebagai row audit baru:
+     - `msg_type = 'revoke'`
+     - `body = '[pesan dihapus / revoked target=<target_msg_id>]'`
+   - **Penting:** Wameow **TIDAK PERNAH menghapus pesan asli** (`target_msg_id`) dari database SQLite (`wameow.db`)! Teks pesan pra-penghapusan tetap 100% utuh dan dapat dibaca kembali.
+
+2. **Auto-Download Stiker & Media:**
+   - Stiker WhatsApp (`StickerMessage`) langsung diunduh otomatis dari CDN WhatsApp ke disk lokal (`/home/user/wameow/media/<session>/sticker_<id>.webp`). Bahkan jika stiker ditarik 1 detik kemudian, file gambarnya tetap aman di harddisk.
+   - Hal yang sama berlaku untuk foto, video, voice note, dan dokumen.
+
+3. **Cara AI Agent Menginspeksi Pesan Terhapus:**
+   ```python
+   import sqlite3, re
+
+   conn = sqlite3.connect('/home/mahdiwafy/wameow/wameow.db')
+   c = conn.cursor()
+
+   # 1. Ambil daftar revoke terbaru
+   c.execute("SELECT id, chat_id, sender_name, body FROM messages WHERE msg_type='revoke' ORDER BY timestamp DESC LIMIT 5")
+   for row in c.fetchall():
+       target_id = re.search(r"target=([A-Za-z0-9_\-]+)", row[3]).group(1)
+       # 2. Ambil isi pesan asli sebelum ditarik
+       c.execute("SELECT sender_name, body, msg_type, local_path FROM messages WHERE id=?", (target_id,))
+       asli = c.fetchone()
+       print(f"Pesan dari {asli[0]} yang dihapus: {asli[1]} (Tipe: {asli[2]})")
+   ```

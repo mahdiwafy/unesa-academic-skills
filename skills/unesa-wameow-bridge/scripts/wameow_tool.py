@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
 """
 Wameow CLI Tool for AI Agents (wameow_tool.py)
-A lightweight helper script to interact with Wameow WhatsApp AI Bridge.
+A comprehensive helper script to interact with Wameow WhatsApp AI Bridge.
 
 Supports:
 - Checking connection status & QR pairing
 - Sending asynchronous text messages (with anti-ban typing simulation)
 - Uploading academic files (Word, Excel, PowerPoint, PDF, images)
 - Searching message history & contacts
+- Keep-Alive Heartbeat ping (/ping)
+- Listing joined groups & group metadata (/groups)
+- Inspecting deleted/revoked messages (WhatsApp Forensics) from wameow.db
 """
 
 import sys
 import os
 import re
 import json
+import sqlite3
 import argparse
 import mimetypes
 import urllib.request
@@ -23,6 +27,7 @@ from typing import Dict, Any, Optional
 
 DEFAULT_BASE_URL = os.environ.get("WAMEOW_BASE_URL", "http://localhost:52135")
 DEFAULT_SESSION = os.environ.get("WAMEOW_SESSION", "wa1")
+DEFAULT_DB_PATH = os.path.expanduser(os.environ.get("WAMEOW_DB_PATH", "~/wameow/wameow.db"))
 
 
 def normalize_phone(phone: str) -> str:
@@ -37,7 +42,7 @@ def normalize_phone(phone: str) -> str:
 
 def make_request(method: str, endpoint: str, data: Optional[Dict[str, Any]] = None, base_url: str = DEFAULT_BASE_URL) -> Dict[str, Any]:
     url = f"{base_url.rstrip('/')}{endpoint}"
-    headers = {"User-Agent": "Wameow-Agent-Client/1.0"}
+    headers = {"User-Agent": "Wameow-Agent-Client/1.1"}
 
     req_data = None
     if data is not None:
@@ -104,6 +109,7 @@ def send_file(
             ".png": "image/png",
             ".jpg": "image/jpeg",
             ".jpeg": "image/jpeg",
+            ".webp": "image/webp",
         }
         mime_type = mime_map.get(ext, "application/octet-stream")
 
@@ -123,10 +129,83 @@ def search_messages(query: str, session: str = DEFAULT_SESSION, base_url: str = 
     return make_request("GET", f"/history/search?q={encoded_q}&session={session}", base_url=base_url)
 
 
+def send_ping(base_url: str = DEFAULT_BASE_URL) -> Dict[str, Any]:
+    """Send heartbeat ping to keep session alive."""
+    return make_request("POST", "/ping", base_url=base_url)
+
+
+def list_groups(session: str = DEFAULT_SESSION, base_url: str = DEFAULT_BASE_URL) -> Dict[str, Any]:
+    """List joined groups for session."""
+    return make_request("GET", f"/groups/{session}", base_url=base_url)
+
+
+def get_scan_url(session: str = DEFAULT_SESSION, base_url: str = DEFAULT_BASE_URL) -> str:
+    """Return URL for the visual web pairing page."""
+    return f"{base_url.rstrip('/')}/scan/{session}"
+
+
+def trigger_reconnect(session: str = DEFAULT_SESSION, base_url: str = DEFAULT_BASE_URL) -> Dict[str, Any]:
+    """Force reset QR session and regenerate a fresh QR channel."""
+    return make_request("POST", f"/reconnect/{session}", base_url=base_url)
+
+
+def inspect_forensics(db_path: str = DEFAULT_DB_PATH, limit: int = 15) -> Dict[str, Any]:
+    """Inspect deleted/revoked WhatsApp messages from SQLite archive."""
+    if not os.path.exists(db_path):
+        return {"error": True, "message": f"Database Wameow tidak ditemukan di: {db_path}"}
+
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+
+        # Find recent revoke events
+        cur.execute("""
+            SELECT datetime(timestamp, 'unixepoch', '+7 hours') as wib,
+                   id, session, chat_id, sender, sender_name, body, msg_type
+            FROM messages
+            WHERE msg_type = 'revoke'
+            ORDER BY timestamp DESC LIMIT ?
+        """, (limit,))
+        revokes = [dict(row) for row in cur.fetchall()]
+
+        results = []
+        for r in revokes:
+            # extract target_id from body: '[pesan dihapus / revoked target=XXX]'
+            body = r.get("body", "")
+            target_match = re.search(r"target=([A-Za-z0-9_\-]+)", body)
+            target_id = target_match.group(1) if target_match else None
+
+            target_msg = None
+            if target_id:
+                cur.execute("""
+                    SELECT datetime(timestamp, 'unixepoch', '+7 hours') as sent_at_wib,
+                           id, sender, sender_name, body, msg_type, has_media, file_name, local_path
+                    FROM messages
+                    WHERE id = ?
+                """, (target_id,))
+                row = cur.fetchone()
+                if row:
+                    target_msg = dict(row)
+
+            results.append({
+                "revoke_event": r,
+                "target_id": target_id,
+                "original_message": target_msg,
+                "status": "RECOVERED" if target_msg else "ORIGINAL_NOT_FOUND"
+            })
+
+        conn.close()
+        return {"total_revokes": len(results), "forensic_records": results}
+    except Exception as e:
+        return {"error": True, "message": f"Query database error: {str(e)}"}
+
+
 def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument("--session", default=DEFAULT_SESSION, help=f"Nama session WhatsApp (default: {DEFAULT_SESSION})")
     parent_parser.add_argument("--base-url", default=DEFAULT_BASE_URL, help=f"Base URL Wameow (default: {DEFAULT_BASE_URL})")
+    parent_parser.add_argument("--db-path", default=DEFAULT_DB_PATH, help=f"Path ke wameow.db (default: {DEFAULT_DB_PATH})")
 
     parser = argparse.ArgumentParser(
         description="Wameow WhatsApp AI Bridge CLI Helper for Agents",
@@ -152,6 +231,22 @@ def main():
     # 4. search
     search_parser = subparsers.add_parser("search", parents=[parent_parser], help="Cari pesan di riwayat chat berdasarkan kata kunci")
     search_parser.add_argument("query", help="Kata kunci pencarian")
+
+    # 5. ping
+    subparsers.add_parser("ping", parents=[parent_parser], help="Kirim sinyal heartbeat keep-alive ping")
+
+    # 6. groups
+    subparsers.add_parser("groups", parents=[parent_parser], help="Daftar grup yang diikuti oleh session")
+
+    # 7. scan-url
+    subparsers.add_parser("scan-url", parents=[parent_parser], help="Tampilkan URL visual halaman scan pairing QR di browser")
+
+    # 8. reconnect
+    subparsers.add_parser("reconnect", parents=[parent_parser], help="Trigger regenerate QR pairing baru")
+
+    # 9. forensics
+    forensics_parser = subparsers.add_parser("forensics", parents=[parent_parser], help="Inspeksi pesan ditarik/dihapus (pesan asli tersimpan di SQLite)")
+    forensics_parser.add_argument("--limit", type=int, default=15, help="Jumlah pesan revoke yang diperiksa (default: 15)")
 
     args = parser.parse_args()
 
@@ -180,6 +275,26 @@ def main():
 
     elif args.command == "search":
         res = search_messages(args.query, session=args.session, base_url=args.base_url)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+
+    elif args.command == "ping":
+        res = send_ping(base_url=args.base_url)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+
+    elif args.command == "groups":
+        res = list_groups(session=args.session, base_url=args.base_url)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+
+    elif args.command == "scan-url":
+        url = get_scan_url(session=args.session, base_url=args.base_url)
+        print(f"🔗 Buka URL berikut di browser untuk scan QR pairing:\n{url}")
+
+    elif args.command == "reconnect":
+        res = trigger_reconnect(session=args.session, base_url=args.base_url)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+
+    elif args.command == "forensics":
+        res = inspect_forensics(db_path=args.db_path, limit=args.limit)
         print(json.dumps(res, indent=2, ensure_ascii=False))
 
 
