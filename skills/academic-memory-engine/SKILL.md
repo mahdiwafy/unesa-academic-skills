@@ -67,6 +67,10 @@ Karakteristik dan gaya kerja dosen pengampu:
 
 Setiap kali pengguna memulai sesi baru atau menanyakan hal terkait riwayat perkuliahan:
 
+0. **Verifikasi Ketersediaan Tool (Reality-Check Protocol):**
+   * Dilarang mengklaim memori/LCM aktif jika tool belum terpasang di runtime.
+   * Cek pemanggilan tool atau file SQLite sebelum menjawab status kesiapan. Jika belum aktif, sampaikan secara transparan.
+
 1. **Auto-Recall Konteks Mahasiswa:**
    Sebelum menjawab atau menanyakan identitas pengguna, panggil `mnemosyne_recall` untuk memeriksa fakta yang sudah tersimpan:
    ```python
