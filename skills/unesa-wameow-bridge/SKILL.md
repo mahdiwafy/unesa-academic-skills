@@ -230,3 +230,50 @@ Wameow mengadopsi prinsip **Zero-Purge Local Archiving**:
        asli = c.fetchone()
        print(f"Pesan dari {asli[0]} yang dihapus: {asli[1]} (Tipe: {asli[2]})")
    ```
+
+---
+
+## 🧹 8. Fitur Hapus Pesan dari HP / Pencarian (`/delete-for-me`)
+
+Fitur untuk menghapus pesan dari perangkat fisik WhatsApp (HP / Desktop / Web) sehingga hilang dari pencarian perangkat, namun **tetap tersimpan utuh di database lokal Wameow**.
+
+### Cara Kerja:
+* Mengirimkan mutasi protokol **AppState** WhatsApp (`IndexDeleteMessageForMe`) dengan action `DeleteMessageForMeAction`.
+* Server WhatsApp akan menginstruksikan HP dan semua linked devices untuk menghapus pesan tersebut dari tampilan chat dan riwayat pencarian.
+* Wameow **tidak menghapus** pesan dari SQLite `wameow.db`, sehingga data audit dan catatan tetap aman di tangan AI Agent Anda.
+
+### Cara Menjalankan via CLI:
+```bash
+# 1. Preview pesan yang cocok dengan kata kunci (Dry-Run)
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py delete-for-me --query "password sso" --dry-run
+
+# 2. Eksekusi hapus pesan dari HP berdasarkan kata kunci
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py delete-for-me --query "password sso"
+
+# 3. Hapus pesan spesifik berdasarkan Message ID
+python3 skills/unesa-wameow-bridge/scripts/wameow_tool.py delete-for-me --message-id "AC1234567890ABC"
+```
+
+---
+
+## 🔄 9. Sinkronisasi Pesan Pasca Terputus (Auto-Sync & HistorySync Backfill)
+
+Jika koneksi WhatsApp terputus (misal server reboot, mati lampu, atau HP offline sementara):
+1. **Database Tetap Aman:** SQLite `wameow.db` berjalan dalam mode WAL (*Write-Ahead Logging*), menjamin data tidak akan pernah korup meskipun service mati tiba-tiba.
+2. **Auto-Reconnect Otomatis:** Engine Wameow terus memantau event `events.Disconnected` dan otomatis mencoba menghubungkan ulang koneksi setiap 5 detik.
+3. **HistorySync Backfill:** Saat koneksi tersambung kembali, server WhatsApp secara otomatis mengirimkan tumpukan pesan yang belum terbaca melalui event `events.HistorySync` dan pesan masuk.
+4. **Idempotent Upsert (Anti-Duplikasi):** Wameow menyimpan pesan dengan klausul `ON CONFLICT(session, id, chat_id) DO UPDATE SET...`, sehingga pesan baru langsung terindeks dan tidak akan ada duplikasi data pesan yang sudah ada sebelumnya.
+
+---
+
+## 👥 10. Arsitektur Multi-Session (Dua Nomor, Tiga Nomor, dst)
+
+Wameow dirancang untuk menangani banyak nomor telepon sekaligus dalam satu service ringan:
+* **Konfigurasi Multi-Session:** Cukup tambahkan nama sesi dan nomor telepon saat menjalankan service:
+  ```bash
+  ./wameow --sessions=wa1,wa2,bph,neo --listen=:52135
+  ```
+  *(Contoh pembagian peran: `wa1` untuk akun pribadi, `wa2` untuk akademik/kuliah, `bph` untuk organisasi, `neo` untuk asisten bot).*
+* **Isolasi Folder Media:** File media dan stiker disimpan terpisah per session di `~/wameow/media/<session>/`.
+* **Anti-Looping:** Nomor sendiri yang terdaftar otomatis dilewati (*skip own-number author*) agar tidak terjadi perulangan pesan tak terbatas (*bot echo loop*).
+* **CLI Multi-Session:** Script `wameow_tool.py` menerima parameter `--session <nama_sesi>` (contoh: `--session wa2`).

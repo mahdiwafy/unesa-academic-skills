@@ -171,17 +171,26 @@ def main():
     print("Jadwal standar: Setiap jam 00:00 malam WIB (0 0 * * *).\n")
 
     # 1. Cek koneksi wameow
+    sessions = []
+    has_connected = False
     try:
         sessions = fetch_api("/sessions")
         print(f"Ditemukan {len(sessions)} sesi di Wameow:")
         for s in sessions:
             st = s.get("status")
+            if st == "connected":
+                has_connected = True
             badge = "🟢" if st == "connected" else "🔴"
             print(f"  {badge} Sesi: {s.get('name')} | Status: {st}")
     except Exception as e:
-        print(f"❌ Gagal menghubungi Wameow di {WAMEOW_URL}: {e}")
-        print("Pastikan service wameow sudah berjalan (systemctl start wameow).")
-        sys.exit(1)
+        print(f"ℹ️  Wameow belum dapat dihubungi di {WAMEOW_URL}: {e}")
+        print("   (Script ping dan cronjob tetap akan disiapkan terlebih dahulu)")
+
+    if not has_connected and len(sessions) > 0:
+        first_session = sessions[0].get("name", "wa1")
+        print(f"\n⚠️  Sesi WhatsApp belum terhubung. Silakan scan QR code di browser:")
+        print(f"   👉 http://localhost:52135/scan/{first_session}")
+        print("   Setelah terhubung, Anda dapat memilih grup tujuan atau chat ke diri sendiri.")
 
     # 2. Edukasi Opsi Target Ping
     print("\n💡 PANDUAN TUJUAN PENGIRIMAN PING:")

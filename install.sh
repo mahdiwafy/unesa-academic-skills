@@ -120,12 +120,29 @@ if [ ! -d "$WAMEOW_DIR" ]; then
     git clone https://github.com/mahdiwafy/wameow.git "$WAMEOW_DIR" 2>/dev/null || true
 fi
 
+# Pastikan Go compiler terpasang
+if ! command -v go &>/dev/null; then
+    echo "   Compiler Go belum terdeteksi. Menginstal Go secara otomatis..."
+    if command -v apt-get &>/dev/null && [ "$(id -u)" -eq 0 ]; then
+        apt-get update && apt-get install -y golang-go 2>/dev/null || true
+    elif command -v sudo &>/dev/null && sudo -n true 2>/dev/null; then
+        sudo apt-get update && sudo apt-get install -y golang-go 2>/dev/null || true
+    else
+        # Unduh Go binary tarball resmi ke ~/.local/go jika tanpa sudo
+        GO_VER="1.22.5"
+        echo "   Mengunduh Go v${GO_VER} binary ke ~/.local/go..."
+        mkdir -p "$HOME/.local"
+        curl -fsSL "https://go.dev/dl/go${GO_VER}.linux-amd64.tar.gz" 2>/dev/null | tar -C "$HOME/.local" -xz 2>/dev/null || true
+        export PATH="$HOME/.local/go/bin:$PATH"
+    fi
+fi
+
 if [ -d "$WAMEOW_DIR" ] && [ ! -f "$WAMEOW_DIR/wameow" ]; then
     if command -v go &>/dev/null; then
         echo "   Membangun binary wameow dari source Go..."
         (cd "$WAMEOW_DIR" && go build -o wameow .) || true
     else
-        echo "   ⚠️ Go belum terinstall. Silakan install Go ('sudo apt install golang-go') untuk build wameow."
+        echo "   ⚠️ Gagal memasang Go otomatis. Silakan install manual: 'sudo apt install golang-go'."
     fi
 fi
 

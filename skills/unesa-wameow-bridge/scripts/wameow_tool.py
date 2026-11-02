@@ -134,6 +134,34 @@ def send_ping(base_url: str = DEFAULT_BASE_URL) -> Dict[str, Any]:
     return make_request("POST", "/ping", base_url=base_url)
 
 
+def delete_for_me(
+    session: str = DEFAULT_SESSION,
+    message_id: Optional[str] = None,
+    query: Optional[str] = None,
+    chat_id: Optional[str] = None,
+    dry_run: bool = False,
+    delete_media: bool = True,
+    base_url: str = DEFAULT_BASE_URL,
+) -> Dict[str, Any]:
+    """
+    Delete message(s) from phone & linked devices via AppState mutation.
+    Message disappears from phone search, but remains preserved in local wameow.db.
+    """
+    payload = {
+        "session": session,
+        "dryRun": dry_run,
+        "deleteMedia": delete_media,
+    }
+    if message_id:
+        payload["messageId"] = message_id
+    if query:
+        payload["query"] = query
+    if chat_id:
+        payload["chatId"] = chat_id
+
+    return make_request("POST", "/delete-for-me", data=payload, base_url=base_url)
+
+
 def list_groups(session: str = DEFAULT_SESSION, base_url: str = DEFAULT_BASE_URL) -> Dict[str, Any]:
     """List joined groups for session."""
     return make_request("GET", f"/groups/{session}", base_url=base_url)
@@ -248,6 +276,14 @@ def main():
     forensics_parser = subparsers.add_parser("forensics", parents=[parent_parser], help="Inspeksi pesan ditarik/dihapus (pesan asli tersimpan di SQLite)")
     forensics_parser.add_argument("--limit", type=int, default=15, help="Jumlah pesan revoke yang diperiksa (default: 15)")
 
+    # 10. delete-for-me
+    del_parser = subparsers.add_parser("delete-for-me", parents=[parent_parser], help="Hapus pesan dari perangkat/pencarian HP (tetap tersimpan di database lokal)")
+    del_parser.add_argument("--message-id", help="ID pesan spesifik yang ingin dihapus")
+    del_parser.add_argument("--query", help="Cari kata kunci teks pesan untuk dihapus dari HP")
+    del_parser.add_argument("--chat-id", help="Filter chat ID tertentu (contoh: 120363xxx@g.us atau 628xxx@s.whatsapp.net)")
+    del_parser.add_argument("--dry-run", action="store_true", help="Lihat daftar pesan yang akan dihapus tanpa benar-benar menghapus")
+    del_parser.add_argument("--keep-media", action="store_true", help="Jangan hapus file media di HP (default: media di HP ikut dihapus)")
+
     args = parser.parse_args()
 
     if args.command == "status":
@@ -295,6 +331,18 @@ def main():
 
     elif args.command == "forensics":
         res = inspect_forensics(db_path=args.db_path, limit=args.limit)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+
+    elif args.command == "delete-for-me":
+        res = delete_for_me(
+            session=args.session,
+            message_id=args.message_id,
+            query=args.query,
+            chat_id=args.chat_id,
+            dry_run=args.dry_run,
+            delete_media=not args.keep_media,
+            base_url=args.base_url,
+        )
         print(json.dumps(res, indent=2, ensure_ascii=False))
 
 

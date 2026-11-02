@@ -124,6 +124,8 @@ Wameow menggunakan engine Go murni ([github.com/mahdiwafy/wameow](https://github
 * ⏰ **Keep-Alive Heartbeat Ping:** Dilengkapi cron otomatis tengah malam (00:00 WIB via `/ping`) ke grup khusus atau chat sendiri agar koneksi WhatsApp di HP/server tidak pernah terputus secara sepihak.
 * 🕵️ **WhatsApp Message Forensics:** Menerapkan *Zero-Purge Local Archiving* di SQLite. Saat lawan bicara menarik pesan (*"Delete for Everyone"*), pesan asli dan stiker/media tetap tersimpan 100% utuh di `wameow.db` dan dapat diinspeksi via `wameow_tool.py forensics`.
 * 🌐 **Visual QR Pairing Web Page:** Halaman scan QR web interaktif di `http://localhost:52135/scan/<session>` dengan auto-refresh 3 detik sehingga pairing dari HP sangat mudah.
+* 🧹 **Hapus Pesan dari HP (Delete for Me):** Kemampuan menghapus pesan tertentu dari perangkat fisik WhatsApp (hilang dari pencarian HP) menggunakan mutasi AppState, sementara rekaman data tetap aman tersimpan di database lokal.
+* 🔄 **Auto-Sync & Multi-Session:** Mendukung banyak nomor WhatsApp sekaligus (`wa1`, `wa2`, `bph`, `neo`) dan otomatis menyinkronkan backlog pesan yang terlewat via `HistorySync` saat koneksi pulih kembali.
 * **Panduan Lengkap Setup & Pairing 1-Klik:**
   - 📖 [Panduan Lengkap Setup Wameow WhatsApp AI](docs/PANDUAN_SETUP_WAMEOW_WHATSAPP_AI.md)
 

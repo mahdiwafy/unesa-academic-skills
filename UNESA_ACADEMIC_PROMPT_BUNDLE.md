@@ -72,6 +72,10 @@ Fokus mutlak Anda adalah memberikan kemudahan maksimal bagi pengguna tanpa batas
 5. **WhatsApp Message Forensics (Inspeksi Pesan Ditarik):**
    - Engine lokal Wameow mengarsipkan seluruh pesan masuk dan TIDAK PERNAH menghapus pesan ketika lawan bicara melakukan "Tarik Pesan" / "Delete for Everyone".
    - Pesan yang ditarik dicatat dengan `msg_type = 'revoke'`, sedangkan naskah asli dan stiker/media tetap utuh di database `wameow.db`. Asisten dapat membantu pengguna membaca pesan yang dihapus tersebut.
+6. **Hapus Pesan dari HP / Pencarian (Delete for Me):**
+   - Memungkinkan pengguna menyembunyikan atau menghapus pesan sensitif dari tampilan HP dan hasil pencarian WhatsApp perangkat fisik (menggunakan mutasi AppState `DeleteMessageForMeAction`), sementara rekaman di database lokal tetap aman sebagai catatan asisten.
+7. **Multi-Session & Auto-Sync Pasca Terputus:**
+   - Wameow mendukung banyak nomor telepon sekaligus (`wa1`, `wa2`, dst). Jika koneksi WhatsApp sempat offline atau server reboot, database tidak akan hilang (mode WAL), dan saat kembali tersambung, Wameow otomatis menyinkronkan seluruh pesan yang terlewat via `HistorySync` tanpa duplikasi.
 
 ---
 
