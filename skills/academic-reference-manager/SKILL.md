@@ -12,13 +12,15 @@ Skill untuk mengelola perpustakaan referensi ilmiah (Mendeley / Zotero) secara o
 
 ## 1. Kemampuan Utama
 
-1. **Ingest Sitasi Otomatis via Metadata / DOI:**
+1. **Pencarian Paper Ilmiah Otomatis (OpenAlex & Crossref API):**
+   Mencari literatur artikel jurnal global, mengekstrak abstract, link Open Access PDF, dan sitasi APA 7th Edition secara instan tanpa perlu kartu kredit / API key berbayar.
+2. **Ingest Sitasi Otomatis via Metadata / DOI:**
    Menambahkan entri pustaka baru (jurnal, prosiding, buku) ke Mendeley secara langsung dengan menyertakan judul, daftar penulis, tahun, abstrak, dan DOI.
-2. **Sinkronisasi Berkas PDF ke Cloud:**
+3. **Sinkronisasi Berkas PDF ke Cloud:**
    Mengunggah berkas PDF naskah ke dokumen Mendeley yang bersangkutan (`POST /files`) sehingga dokumen langsung dapat dibaca dan diberi anotasi di Mendeley Desktop / Web.
-3. **Pencarian Literatur di Pustaka:**
+4. **Pencarian Literatur di Pustaka:**
    Mengecek apakah suatu referensi sudah pernah tersimpan sebelum menambahkan entri baru (mencegah duplikasi).
-4. **Harmonisasi Sitasi Naskah (*In-Text Citation*):**
+5. **Harmonisasi Sitasi Naskah (*In-Text Citation*):**
    Memastikan nama penulis dan tahun di tubuh tulisan cocok 100% dengan database referensi (bekerja sama dengan skill `unesa-academic-standards`).
 
 ---
@@ -42,11 +44,25 @@ Skill untuk mengelola perpustakaan referensi ilmiah (Mendeley / Zotero) secara o
 
 ## 3. Panduan Penggunaan CLI Service
 
+### A. Pencarian Jurnal Ilmiah & Sitasi Kilat (`paper_search_tool.py`)
+```bash
+# 1. Cari paper bereputasi berdasarkan topik riset (OpenAlex API)
+python3 skills/academic-reference-manager/scripts/paper_search_tool.py search "CPU Scheduling Algorithms" --limit 3
+
+# 2. Ekstrak metadata & sitasi APA 7th dari nomor DOI (Crossref API)
+python3 skills/academic-reference-manager/scripts/paper_search_tool.py doi "10.1145/3341302.3342080"
+
+# 3. Unduh berkas PDF Open Access langsung ke laptop
+python3 skills/academic-reference-manager/scripts/paper_search_tool.py download "<PDF_URL>" --out ~/Downloads/paper.pdf
+```
+
+### B. Pengelolaan Koleksi Mendeley Cloud (`mendeley_service.py`)
+
 Modul CLI terletak di:
 `scripts/mendeley_service.py` (atau `~/.hermes/mendeley/mendeley_service.py` jika terinstal di Hermes).
 
-### A. Cek Daftar Dokumen
 ```bash
+# 1. Cek Daftar Dokumen
 python3 scripts/mendeley_service.py list --limit 20
 ```
 

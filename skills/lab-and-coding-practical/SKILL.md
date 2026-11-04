@@ -98,3 +98,22 @@ Bagi praktikum Data Science, AI, atau Statistika yang mengumpulkan berkas `.ipyn
 3. **Bebas dari Warning/Error Menumpuk:**
    * Bersihkan output stack trace error panjang yang tidak perlu.
    * Supress warning library yang tidak relevan dengan `warnings.filterwarnings('ignore')` jika output mengganggu kerapian laporan.
+
+---
+
+## 4. Standar Portofolio Praktikum via GitHub CLI (`gh`)
+
+Bagi mahasiswa rumpun informatika/teknik, dokumentasi kode laboratorium dapat disinkronkan langsung ke akun GitHub menggunakan tool resmi GitHub CLI:
+
+1. **Inisialisasi & Hubungkan Repositori:**
+   ```bash
+   gh repo create tugas-praktikum-struktur-data --public --source=. --remote=origin
+   ```
+2. **Auto-Commit Terstruktur Per-Modul:**
+   Gunakan format commit konvensional:
+   - `feat(modul-03): implement binary search tree in C++`
+   - `docs(modul-03): add lab report and complexity analysis`
+3. **Pembuatan Gist Kilat untuk Asistensi Dosen/Aslab:**
+   ```bash
+   gh gist create solution.py --desc "Solusi Praktikum Modul 3 BST" --public
+   ```

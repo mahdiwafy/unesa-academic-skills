@@ -41,11 +41,25 @@ Tahapan wajib mahasiswa di setiap awal semester:
 
 ---
 
-## 3. Best Practice Pembelajaran Daring di Vinesa (LMS Moodle)
+## 3. Otomasi & Best Practice Pembelajaran Daring di Vinesa (LMS Moodle)
 
-1. **Sinkronisasi Enrollment Key (Enrolment Key):**
+1. **Vinesa REST API Tool (`vinesa_tool.py`):**
+   Agen AI dapat langsung memantau tugas kuliah dan materi Vinesa tanpa perlu membuka browser berulang kali:
+   ```bash
+   # 1. Cek mata kuliah aktif
+   python3 skills/unesa-portal-guide/scripts/vinesa_tool.py courses
+
+   # 2. Pantau deadline tugas & kuis yang mendekat
+   python3 skills/unesa-portal-guide/scripts/vinesa_tool.py assignments
+
+   # 3. Ambil daftar materi per pertemuan
+   python3 skills/unesa-portal-guide/scripts/vinesa_tool.py contents <COURSE_ID>
+   ```
+   *Konfigurasi disimpan di `~/.hermes/credentials/vinesa.json` (didapat dari menu Security Keys Vinesa).*
+
+2. **Sinkronisasi Enrollment Key (Enrolment Key):**
    * Dapatkan enrolment key mata kuliah dari Dosen Pengampu atau PJ MK.
-2. **Manajemen Pengumpulan Tugas (Submission Deadline):**
+3. **Manajemen Pengumpulan Tugas (Submission Deadline):**
    * Perhatikan zona waktu server (WIB). Hindari mengunggah tugas pada menit-menit terakhir sebelum deadline.
    * Standar penamaan file tugas: `[NIM]_[Nama Lengkap]_[NamaTugas].[pdf/docx/zip]`.
    * Selalu pastikan status pengumpulan berubah menjadi **"Submitted for grading"** (berwarna hijau).
