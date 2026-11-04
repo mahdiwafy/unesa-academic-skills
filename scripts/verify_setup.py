@@ -81,9 +81,9 @@ def check_wameow():
             for item in data:
                 s_name = item.get("name", "")
                 all_sessions.append(s_name)
-                if item.get("status") == "connected":
+                if item.get("status") in ["connected", "working"]:
                     connected_sessions.append(s_name)
-                elif item.get("status") in ["qr", "qr_active", "disconnected"]:
+                elif item.get("status") in ["qr", "qr_active", "disconnected", "scan_qr_code"]:
                     qr_needed.append(s_name)
     except Exception:
         pass
