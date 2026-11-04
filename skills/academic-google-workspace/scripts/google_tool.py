@@ -401,6 +401,44 @@ def slides_get(args):
     }, indent=2, ensure_ascii=False))
 
 
+# --- Google Contacts (People API) ---
+def contacts_search(args):
+    q = urllib.parse.quote(args.query)
+    url = f"https://people.googleapis.com/v1/people:searchContacts?query={q}&readMask=names,emailAddresses,phoneNumbers&pageSize={args.max}"
+    res = api_request("GET", url, account=args.account)
+    contacts = []
+    for item in res.get("results", []):
+        p = item.get("person", {})
+        names = p.get("names", [{}])[0].get("displayName", "")
+        emails = [e.get("value") for e in p.get("emailAddresses", [])]
+        phones = [ph.get("value") for ph in p.get("phoneNumbers", [])]
+        contacts.append({
+            "name": names,
+            "phones": phones,
+            "emails": emails,
+            "resourceName": p.get("resourceName")
+        })
+    print(json.dumps(contacts, indent=2, ensure_ascii=False))
+
+
+def contacts_list(args):
+    url = f"https://people.googleapis.com/v1/people/me/connections?pageSize={args.max}&personFields=names,emailAddresses,phoneNumbers"
+    res = api_request("GET", url, account=args.account)
+    contacts = []
+    for p in res.get("connections", []):
+        names = p.get("names", [{}])[0].get("displayName", "")
+        emails = [e.get("value") for e in p.get("emailAddresses", [])]
+        phones = [ph.get("value") for ph in p.get("phoneNumbers", [])]
+        if names or emails or phones:
+            contacts.append({
+                "name": names,
+                "phones": phones,
+                "emails": emails,
+                "resourceName": p.get("resourceName")
+            })
+    print(json.dumps(contacts, indent=2, ensure_ascii=False))
+
+
 def main():
     parser = argparse.ArgumentParser(description="Unified Google Workspace Tool for UNESA")
     parser.add_argument("--account", choices=["personal", "sso", "unesa"], default=None, help="Akun Google (personal vs sso)")
@@ -530,6 +568,18 @@ def main():
     p = sl_sub.add_parser("get")
     p.add_argument("presentation_id")
     p.set_defaults(func=slides_get)
+
+    # Contacts
+    ct_parser = sub.add_parser("contacts")
+    ct_sub = ct_parser.add_subparsers(dest="action", required=True)
+    p = ct_sub.add_parser("search")
+    p.add_argument("query", help="Nama atau kata kunci kontak")
+    p.add_argument("--max", type=int, default=10)
+    p.set_defaults(func=contacts_search)
+
+    p = ct_sub.add_parser("list")
+    p.add_argument("--max", type=int, default=20)
+    p.set_defaults(func=contacts_list)
 
     args = parser.parse_args()
     args.func(args)
