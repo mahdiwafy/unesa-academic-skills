@@ -439,6 +439,59 @@ def contacts_list(args):
     print(json.dumps(contacts, indent=2, ensure_ascii=False))
 
 
+def contacts_set_birthday(args):
+    import re
+    raw = args.date.strip()
+    year = None
+    month = None
+    day = None
+    parts = re.split(r"[-/.]", raw)
+    if len(parts) == 3:
+        year = int(parts[0]) if len(parts[0]) == 4 else int(parts[2])
+        month = int(parts[1])
+        day = int(parts[2]) if len(parts[0]) == 4 else int(parts[0])
+    elif len(parts) == 2:
+        month = int(parts[0])
+        day = int(parts[1])
+    else:
+        print(json.dumps({"error": True, "message": "Format tanggal salah. Gunakan YYYY-MM-DD atau MM-DD (contoh: 2007-08-11 atau 08-11)"}))
+        return
+
+    q = urllib.parse.quote(args.query)
+    search_url = f"https://people.googleapis.com/v1/people:searchContacts?query={q}&readMask=names,birthdays"
+    res = api_request("GET", search_url, account=args.account)
+    results = res.get("results", [])
+    if not results:
+        print(json.dumps({"error": True, "message": f"Kontak '{args.query}' tidak ditemukan."}))
+        return
+
+    person = results[0].get("person", {})
+    rname = person.get("resourceName")
+    etag = person.get("etag")
+    name = person.get("names", [{}])[0].get("displayName", args.query)
+
+    bday_obj = {"day": day, "month": month}
+    if year:
+        bday_obj["year"] = year
+
+    patch_url = f"https://people.googleapis.com/v1/{rname}:updateContact?updatePersonFields=birthdays"
+    payload = {
+        "etag": etag,
+        "birthdays": [{"date": bday_obj}]
+    }
+    patch_res = api_request("PATCH", patch_url, data=payload, account=args.account)
+    if "error" in patch_res:
+        print(json.dumps(patch_res, indent=2, ensure_ascii=False))
+    else:
+        date_str = f"{year}-{month:02d}-{day:02d}" if year else f"{month:02d}-{day:02d}"
+        print(json.dumps({
+            "status": "success",
+            "contact": name,
+            "resourceName": rname,
+            "birthday": date_str
+        }, indent=2, ensure_ascii=False))
+
+
 def main():
     parser = argparse.ArgumentParser(description="Unified Google Workspace Tool for UNESA")
     parser.add_argument("--account", choices=["personal", "sso", "unesa"], default=None, help="Akun Google (personal vs sso)")
@@ -580,6 +633,11 @@ def main():
     p = ct_sub.add_parser("list")
     p.add_argument("--max", type=int, default=20)
     p.set_defaults(func=contacts_list)
+
+    p = ct_sub.add_parser("set-birthday")
+    p.add_argument("query", help="Nama atau kata kunci kontak")
+    p.add_argument("--date", required=True, help="Tanggal lahir format YYYY-MM-DD atau MM-DD (contoh: 2007-08-11)")
+    p.set_defaults(func=contacts_set_birthday)
 
     args = parser.parse_args()
     args.func(args)
