@@ -16,11 +16,12 @@ Skill integrasi resmi untuk menghubungkan AI Agent ke seluruh ekosistem layanan 
 
 ---
 
-## ⚡ 1. Kredensial Project Pre-Configured (Sekali Klik)
+## ⚡ 1. Kredensial Project Pre-Configured (Agent Connect)
 
 Pengguna **TIDAK PERLU** lagi membuat project rumit di Google Cloud Console atau mengunduh file JSON secara manual. Repositori ini telah menyertakan kredensial Desktop Application resmi:
 
-* **File Kredensial Default:** `~/.hermes/google_client_secret.json` (otomatis disalin saat instalasi).
+* **Nama Aplikasi Resmi di Layar Login:** **`Agent Connect`** (Project `leo-project-498200`).
+* **File Kredensial Default:** `~/.hermes/google_client_secret.json` (otomatis digenerate/disalin saat instalasi).
 * **Dukungan Dua Akun:**
   - **Akun Personal:** `google_token_personal.json` (default untuk kalender dan drive pribadi).
   - **Akun SSO Kampus (`@mhs.unesa.ac.id`):** `google_token_sso.json` (untuk tugas kampus dan classroom).
@@ -102,8 +103,8 @@ python3 skills/academic-google-workspace/scripts/google_tool.py tasks list
 
 ---
 
-## 🔒 4. Keamanan & Zero-Leakage Protocol
+## 🔒 4. Keamanan & Efisiensi Output (Anti-Truncation)
 
-1. Kredensial client dan access token disimpan secara lokal di `~/.hermes/`.
-2. Tidak ada data Google pengguna yang diunggah ke pihak ketiga selain server resmi Google API.
-3. Refresh token diperbarui secara otomatis di latar belakang saat masa aktif token habis (auto-refresh).
+1. **Efisiensi Output Chat (Anti-Truncation):** Saat membaca data Google Sheets ratusan baris atau file Google Docs besar, **DILARANG** mencetak seluruh data mentah ke chat untuk mencegah token limit terlampaui (*budget exhaustion*). Sajikan ringkasan eksekutif dan tawarkan simpan ke berkas lokal jika data lengkap dibutuhkan.
+2. **Kerahasiaan Lokal:** Kredensial client dan access token disimpan secara lokal di `~/.hermes/` dengan permission aman `0600`.
+3. **Auto Token Refresh:** CLI script secara otomatis memperbarui access token di latar belakang saat masa aktif token habis.
