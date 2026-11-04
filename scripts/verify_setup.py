@@ -43,6 +43,7 @@ def check_academic_skills():
         "lab-and-coding-practical",
         "smart-study-and-research",
         "unesa-portal-guide",
+        "academic-google-workspace",
     ]
     if not os.path.isdir(SKILLS_DIR):
         return {"status": "FAIL", "installed": 0, "total": len(required_skills), "missing": required_skills}
@@ -271,6 +272,43 @@ def check_keepalive_cron():
     }
 
 
+def check_google_workspace():
+    secret_paths = [
+        os.path.join(HERMES_DIR, "google_client_secret.json"),
+        os.path.join(HERMES_DIR, "skills", "academic", "academic-google-workspace", "credentials", "google_client_secret.json"),
+    ]
+    secret_exists = any(os.path.isfile(p) for p in secret_paths)
+
+    tokens = []
+    for f in ["google_token_personal.json", "google_token_sso.json", "google_token.json"]:
+        p = os.path.join(HERMES_DIR, f)
+        if os.path.isfile(p):
+            try:
+                with open(p) as tf:
+                    td = json.load(tf)
+                if td.get("token") or td.get("refresh_token"):
+                    tokens.append(f.replace("google_token_", "").replace(".json", ""))
+            except Exception:
+                pass
+
+    if secret_exists and len(tokens) > 0:
+        status = "OK"
+        detail = f"Connected ({', '.join(tokens)}) via project credentials"
+    elif secret_exists:
+        status = "NEEDS_AUTH"
+        detail = "Client credentials ready. Run setup_google.py --auth-url to login."
+    else:
+        status = "NOT_INSTALLED"
+        detail = "Kredensial Google Workspace belum terpasang."
+
+    return {
+        "status": status,
+        "secret_exists": secret_exists,
+        "connected_accounts": tokens,
+        "detail": detail,
+    }
+
+
 def check_credentials_dir():
     exists = os.path.isdir(CREDENTIALS_DIR)
     file_count = len(os.listdir(CREDENTIALS_DIR)) if exists else 0
@@ -292,6 +330,7 @@ def main():
     mnemosyne = check_mnemosyne()
     lcm = check_lcm()
     cron = check_keepalive_cron()
+    gws = check_google_workspace()
     creds = check_credentials_dir()
 
     results = {
@@ -300,6 +339,7 @@ def main():
         "mnemosyne_memory": mnemosyne,
         "hermes_lcm": lcm,
         "whatsapp_keepalive_cron": cron,
+        "google_workspace": gws,
         "credentials_storage": creds,
     }
 
@@ -314,12 +354,13 @@ def main():
     def icon(status):
         if status == "OK":
             return "✅ [PASS]"
-        elif status in ["PARTIAL", "NEEDS_QR", "PORT_UNREACHABLE", "STOPPED"]:
+        elif status in ["PARTIAL", "NEEDS_QR", "PORT_UNREACHABLE", "STOPPED", "NEEDS_AUTH"]:
             return "⚠️  [WARN]"
         else:
             return "❌ [FAIL]"
 
     print(f"{icon(skills['status'])} Academic Skills        : {skills['installed']}/{skills['total']} skills installed in ~/.hermes/skills/academic")
+    print(f"{icon(gws['status'])} Google Workspace (Suite): {gws['detail']}")
     print(f"{icon(wameow['status'])} Wameow WhatsApp Bridge : {wameow['detail']}")
     print(f"{icon(mnemosyne['status'])} Mnemosyne Memory       : {mnemosyne['detail']}")
     print(f"{icon(lcm['status'])} Hermes LCM (Context)    : {lcm['detail']}")
@@ -329,7 +370,7 @@ def main():
 
     # Reality Check Summary for AI Agents
     print("\n💡 PANDUAN UNTUK AI AGENT (ZERO-HALLUCINATION DIRECTIVE):")
-    all_ok = all(r["status"] == "OK" for r in [skills, wameow, mnemosyne, lcm, cron])
+    all_ok = all(r["status"] == "OK" for r in [skills, wameow, mnemosyne, lcm, cron, gws])
     if all_ok:
         print("  Semua komponen terverifikasi AKTIF secara nyata. Anda dapat melayani")
         print("  pengguna secara penuh tanpa halusinasi.")

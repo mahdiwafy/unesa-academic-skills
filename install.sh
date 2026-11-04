@@ -43,13 +43,20 @@ mkdir -p "$CREDENTIALS_DIR"
 mkdir -p "$SCRIPTS_DIR"
 
 # 2. Salin seluruh skill ke direktori Hermes
-echo "📦 1/5. Menyalin 12 skill akademik ke $HERMES_SKILLS_DIR..."
+echo "📦 1/6. Menyalin 13 skill akademik ke $HERMES_SKILLS_DIR..."
 cp -r "$REPO_DIR/skills/"* "$HERMES_SKILLS_DIR/"
 
 # 2b. Siapkan service helper
 mkdir -p "$HERMES_DIR/mendeley"
 cp "$REPO_DIR/skills/academic-reference-manager/scripts/mendeley_service.py" "$HERMES_DIR/mendeley/mendeley_service.py" 2>/dev/null || true
 chmod +x "$HERMES_DIR/mendeley/mendeley_service.py" 2>/dev/null || true
+
+# 2c. Siapkan kredensial default Google Workspace jika belum ada
+if [ ! -f "$HERMES_DIR/google_client_secret.json" ] && [ -f "$REPO_DIR/skills/academic-google-workspace/credentials/google_client_secret.json" ]; then
+    echo "🔑 Menyalin default Google Workspace client_secret.json ke ~/.hermes/..."
+    cp "$REPO_DIR/skills/academic-google-workspace/credentials/google_client_secret.json" "$HERMES_DIR/google_client_secret.json"
+    chmod 600 "$HERMES_DIR/google_client_secret.json" 2>/dev/null || true
+fi
 
 # 3. Beri permission execute pada script pembantu
 find "$HERMES_SKILLS_DIR" -name "*.py" -exec chmod +x {} + 2>/dev/null || true
@@ -148,10 +155,18 @@ fi
 
 # 8. Setup WhatsApp Keep-Alive Heartbeat Ping
 echo ""
-echo "⏰ 5/5. Mengonfigurasi WhatsApp Keep-Alive Heartbeat Ping..."
+echo "⏰ 5/6. Mengonfigurasi WhatsApp Keep-Alive Heartbeat Ping..."
 python3 "$REPO_DIR/skills/unesa-wameow-bridge/scripts/setup_keepalive.py" --auto 2>/dev/null || true
 
-# 9. Jalankan Pengecekan Realitas (Reality-Check Verification)
+# 9. Setup Google Workspace Dependencies
+echo ""
+echo "🌐 6/6. Memeriksa Google Workspace Library..."
+if ! $TARGET_PYTHON -c "import googleapiclient" 2>/dev/null; then
+    echo "   Menginstal google-api-python-client & google-auth..."
+    $TARGET_PYTHON -m pip install --upgrade google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 2>/dev/null || pip install --upgrade google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 2>/dev/null || true
+fi
+
+# 10. Jalankan Pengecekan Realitas (Reality-Check Verification)
 echo ""
 python3 "$REPO_DIR/scripts/verify_setup.py"
 

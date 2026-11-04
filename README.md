@@ -40,10 +40,11 @@ Bagi pengguna agen cerdas seperti **Hermes Agent**, file [`SOUL_TEMPLATE.md`](SO
 
 ---
 
-## 📦 Daftar 12 Skill yang Termasuk
+## 📦 Daftar 13 Skill yang Termasuk
 
 | Nama Skill | Deskripsi & Kegunaan |
 | :--- | :--- |
+| **`academic-google-workspace`** | Akses dan otomasi ekosistem Google: **Google Sheets** (rekapitulasi nilai/praktikum), **Google Docs** (makalah/tugas), **Google Drive** (upload/download file), **Google Photos** (dokumentasi kegiatan/KTM), **Calendar**, **Tasks**, **Classroom**, dan **Gmail**. Dilengkapi kredensial project pre-configured (**Agent Connect**). |
 | **`unesa-academic-standards`** | Standar penulisan karya ilmiah, makalah, dan skripsi format A4, margin baku (4-4-3-3 / 3-3-3-3), Times New Roman 12 pt spasi 1.5, sitasi APA 7th / IEEE, serta generator file `.docx` otomatis. |
 | **`academic-life-schedule`** | Manajemen jadwal kuliah & kehidupan: sinkronisasi otomatis **Google Calendar** (acara waktu pasti, pergeseran jam kuliah) & **Google Tasks** (deadline penugasan, checklist ujian, buffer perjalanan) dengan pola anti-duplikasi (*upsert*). |
 | **`academic-reference-manager`** | Manajemen perpustakaan referensi ilmiah **Mendeley & Zotero**: sinkronisasi metadata jurnal dari DOI, unggah naskah berkas PDF ke cloud, pencarian pustaka, dan ekspor sitasi APA 7th. |

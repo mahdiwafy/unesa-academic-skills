@@ -48,6 +48,7 @@ Thumbs.db
 *.token.json
 *tokens.json
 *client_secret*.json
+!skills/academic-google-workspace/credentials/client_secret.json.example
 credentials*.json
 *.pem
 *.key

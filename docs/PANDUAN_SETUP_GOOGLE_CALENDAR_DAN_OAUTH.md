@@ -1,67 +1,59 @@
-# 📖 Panduan Mandiri Integrasi Google Calendar & Tasks
+# 📖 Panduan Integrasi Google Workspace (Sheets, Docs, Drive, Photos, Calendar, Tasks)
 
-Panduan ini menjelaskan cara menghubungkan akun Google pribadi / kampus ke asisten AI secara **100% mandiri, aman, dan gratis** menggunakan Google Cloud Console masing-masing pengguna.
+Panduan menghubungkan akun Google Anda (Personal `@gmail.com` atau Kampus `@mhs.unesa.ac.id`) ke AI Agent untuk mengakses Google Sheets, Google Docs, Google Drive, Google Photos, Calendar, dan Tasks secara **100% lokal, aman, dan privat**.
 
-> **Prinsip Privasi:** Tidak ada token, password, atau jadwal pribadi yang dibagikan ke server pihak ketiga. Seluruh konfigurasi dan token autentikasi disimpan secara lokal dan privat di perangkat Anda sendiri.
-
----
-
-## ⚡ Langkah Mudah: Setup Google OAuth Mandiri (Sekali Setup, ~3 Menit)
-
-### Langkah 1: Buat Project Gratis di Google Cloud
-1. Buka [Google Cloud Console](https://console.cloud.google.com/).
-2. Login menggunakan akun Google Anda (bisa akun personal `@gmail.com` atau akun kampus).
-3. Klik dropdown project di bagian atas (sebelah logo Google Cloud) -> Klik **"New Project"**.
-4. Beri nama project, misalnya: `Asisten-Akademik-Pribadi` -> Klik **Create**.
+> **Prinsip Privasi:** Tidak ada token, password, atau berkas pribadi yang dibagikan ke server pihak ketiga. Seluruh konfigurasi dan token autentikasi disimpan secara lokal dan privat di perangkat Anda (`~/.hermes/`).
 
 ---
 
-### Langkah 2: Aktifkan API Calendar & Tasks
-1. Di sidebar kiri, buka menu **APIs & Services** -> **Library**.
-2. Cari **"Google Calendar API"** -> Klik dan tekan tombol **Enable**.
-3. Kembali ke Library, cari **"Google Tasks API"** -> Klik dan tekan tombol **Enable**.
+## ⚡ OPSI 1: Setup Kilat 1-Klik (Direkomendasikan ⚡)
+
+Anda **TIDAK PERLU** membuat project di Google Cloud Console atau mengunduh JSON manual. Repositori ini telah menyertakan kredensial resmi **Agent Connect**:
+
+### 1. Dapatkan Link Login Google
+Jalankan di terminal:
+```bash
+python3 skills/academic-google-workspace/scripts/setup_google.py --auth-url --account personal
+```
+*(Gunakan `--account sso` untuk menautkan akun kampus UNESA).*
+
+### 2. Otorisasi Akun di Browser
+1. Buka tautan URL yang muncul di browser Anda.
+2. Layar persetujuan resmi Google akan menampilkan: **"Lanjutkan ke Agent Connect"**.
+3. Pilih akun Google Anda, centang izin akses (Drive, Docs, Sheets, Photos, Calendar, Tasks), lalu klik **Lanjutkan / Izinkan**.
+4. Salin URL hasil pengalihan (redirect) dari address bar browser (`http://localhost/?code=4/0A...`).
+
+### 3. Masukkan Kode Otorisasi
+Tempelkan URL atau kode yang telah disalin ke terminal:
+```bash
+python3 skills/academic-google-workspace/scripts/setup_google.py --auth-code "KODE_ATAU_URL_HASIL_REDIRECT" --account personal
+```
+
+**Selesai!** Akun Google Anda telah resmi terhubung ke AI Agent.
 
 ---
 
-### Langkah 3: Konfigurasi Layar Persetujuan (OAuth Consent Screen)
-1. Di menu sebelah kiri, klik **APIs & Services** -> **OAuth consent screen**.
-2. Pilih User Type: **External** -> Klik **Create**.
-3. Isi data dasar aplikasi:
-   * **App name:** `Asisten Akademik` (atau nama pilihan Anda).
-   * **User support email:** Pilih email Google Anda.
-   * **Developer contact information:** Masukkan email Google Anda.
-   * Klik **Save and Continue**.
-4. Pada tab **Scopes**, klik **Add or Remove Scopes**:
-   * Centang `/auth/calendar.events` (atau `/auth/calendar`) untuk izin kalender.
-   * Centang `/auth/tasks` untuk izin tugas/deadline.
-   * Klik **Update** -> Klik **Save and Continue**.
-5. Pada tab **Test users**:
-   * Klik **+ Add Users**, lalu masukkan alamat email Google Anda sendiri.
-   * Klik **Save and Continue**.
+## 🛠️ OPSI 2: Setup Mandiri di Google Cloud Console (Opsional)
 
----
+Jika Anda ingin menggunakan Google Cloud Project milik Anda sendiri:
 
-### Langkah 4: Buat Kredensial OAuth (Desktop Client)
-1. Di menu sebelah kiri, klik **APIs & Services** -> **Credentials**.
-2. Klik tombol **+ Create Credentials** di bagian atas -> Pilih **OAuth client ID**.
-3. Pilih Application type: **Desktop app**.
-4. Beri nama (misal `Asisten Desktop Client`) -> Klik **Create**.
-5. Jendela konfirmasi akan muncul. Klik tombol **Download JSON** (ikon unduh panah ke bawah).
-
----
-
-### Langkah 5: Pasang Kredensial & Autentikasi
-1. Pindahkan atau simpan file JSON yang baru diunduh ke direktori asisten Anda, misalnya:
+1. Buka [Google Cloud Console](https://console.cloud.google.com/) dan buat project baru.
+2. Aktifkan API yang dibutuhkan di menu **APIs & Services -> Library**:
+   * Google Drive API
+   * Google Sheets API
+   * Google Docs API
+   * Google Calendar API
+   * Google Tasks API
+   * Photos Library API
+3. Di menu **OAuth consent screen**:
+   * Set nama aplikasi: `Agent Connect`
+   * Masukkan email dukungan dan developer.
+   * Tambahkan Scopes yang dibutuhkan.
+4. Di menu **Credentials**:
+   * Klik **+ Create Credentials** -> **OAuth client ID** -> Tipe: **Desktop app**.
+   * Unduh file JSON kredensial.
+5. Simpan file kredensial Anda:
    ```bash
-   cp ~/Downloads/client_secret_*.json ~/.hermes/google_client_secret.json
+   python3 skills/academic-google-workspace/scripts/setup_google.py --client-secret ~/Downloads/client_secret_*.json
    ```
-2. Jalankan perintah inisialisasi login di terminal:
-   ```bash
-   python3 ~/.hermes/skills/productivity/google-workspace/scripts/setup.py --client-secret ~/.hermes/google_client_secret.json
-   python3 ~/.hermes/skills/productivity/google-workspace/scripts/setup.py --auth-url
-   ```
-3. Buka URL login yang muncul di browser, klik akun Google Anda, berikan centang izin akses Calendar & Tasks, lalu salin URL hasil redirect `http://localhost:1/?code=...` kembali ke terminal:
-   ```bash
-   python3 ~/.hermes/skills/productivity/google-workspace/scripts/setup.py --auth-code "URL_YANG_DISALIN"
-   ```
-4. **Selesai!** Akun Google Calendar & Tasks Anda sudah terhubung secara privat di mesin Anda sendiri.
+6. Jalankan autentikasi seperti pada Opsi 1.
